@@ -353,9 +353,7 @@ public class Matrix {
     public static void cramer(){
         Matrix M = inputMatrix();
         Matrix A = getA(M);
-        Matrix B = new Matrix(M.baris, 1);
-        B = getB(M);
-        printMatrix(A);
+        Matrix B = getB(M);
         double DetA = Determinan(A);
         double[] Det = new double[A.kolom];
         double[] X = new double[A.kolom];
