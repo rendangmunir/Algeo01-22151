@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -116,7 +117,7 @@ public class Matrix {
         }
     }
 
-    public static double[] Gauss(){
+    private static double[] Gauss(){
         double[] x={0};
         Matrix M = inputMatrix();
         int maxBaris = M.baris;
@@ -185,8 +186,11 @@ public class Matrix {
                 x[i] = tmp/M.Matrix[i][i];
             }
 
+            System.out.println("Hasil SPL menggunakan metode gauss sebagai berikut");
             for(int i=0;i<maxBaris;i++){
-                System.out.println("X"+(i+1)+" : "+x[i]);
+                System.out.print("X"+(i+1)+" : ");
+                System.out.format("%.6f",x[i]);
+                System.out.println("");
             }
         }
         return x;
