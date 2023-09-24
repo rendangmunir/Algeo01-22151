@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+import java.lang.Math;
 
 public class Matrix {
 
@@ -103,65 +104,92 @@ public class Matrix {
             System.out.println("");
         }
     }
-    /*Operasi Matriks */
-    public static Matrix dotPMatrix(Matrix M, double k){
-        Matrix out = new Matrix(M.baris, M.kolom);
-        int i,j;
-        for (i=0; i<M.baris; i++){
-            for (j=0; j<M.kolom; j++){
-                out.Matrix[i][j] = M.Matrix[i][j]*k;
-            }
+
+    public static void SPL(){
+        Scanner input = new Scanner(System.in);
+        System.out.println("Pilih metode yang ingin digunakan");
+        System.out.println("1. Gauss");
+        int pilihan = input.nextInt();
+        double[] x = {};
+        if(pilihan == 1){
+            x = Gauss();
         }
-        return out;
     }
 
-    public void dotPMatrix(double k){
-        this.Matrix = dotPMatrix(this, k).Matrix;
-    }
+    public static double[] Gauss(){
+        double[] x={0};
+        Matrix M = inputMatrix();
+        int maxBaris = M.baris;
+        int maxKolom = M.kolom;
+        x = new double[M.baris];
 
-    public static Matrix crossMatrix(Matrix M, Matrix N){
-        //prekondisi : M.Kolom==N.Baris
-        Matrix out = new Matrix(M.baris, N.kolom);
-        for (int i = 0; i < out.baris; i++) {
-            for (int j = 0; j < out.kolom; j++) {
-                out.Matrix[i][j] = 0;
-                for (int k = 0; k < M.kolom; k++) {
-                    out.Matrix[i][j] += M.Matrix[i][k] * N.Matrix[k][j];
+        for(int k=0;k<maxBaris;k++){
+            double mx_el = M.Matrix[k][k];
+            int mx_row = k;
+            
+            for(int i=k+1;i<maxBaris;i++){
+                if(Math.abs(M.Matrix[i][k]) > mx_el){
+                    mx_el = M.Matrix[i][k];
+                    mx_row = i;
                 }
             }
+
+            for(int i=0;i<maxKolom;i++){
+                double temp = M.Matrix[k][i];
+                M.Matrix[k][i] = M.Matrix[mx_row][i];
+                M.Matrix[mx_row][i] = temp;
+            }
+
+            for(int i=k+1;i<maxBaris;i++){
+                double fact = M.Matrix[i][k] / M.Matrix[k][k];
+
+                for(int j = k+1; j<maxKolom ;j++){
+                    M.Matrix[i][j] -= fact * M.Matrix[k][j];
+                }
+                M.Matrix[i][k] = 0;
+            }
+        }
+        // cek solusi banyak & gaada solusi
+        boolean solBanyak = false;
+        boolean minSolusi = false;
+        boolean cek = true;
+        int j=0;
+        while(cek && j<maxKolom-1){
+            if(M.Matrix[maxBaris-1][j]!=0){
+                cek = false;
+            }
+            j++;
         }
 
-        return out;
-        
+        if(cek){
+            if(M.Matrix[maxBaris-1][maxKolom-1]!=0){
+                minSolusi = true;
+            }
+            else{
+                solBanyak = true;
+            }
+        }
+
+        if(solBanyak){
+            System.out.println("SPL ini memiliki banyak solusi");
+        }
+        else if(minSolusi){
+            System.out.println("SPL ini tidak memiliki solusi");
+        }
+        else{
+            for(int i=maxBaris-1;i>=0;i--){
+                double tmp = M.Matrix[i][maxKolom-1];
+                for(int k=i+1;k<maxBaris;k++){
+                    tmp+=x[k]*M.Matrix[i][k]*-1;
+                }
+                x[i] = tmp/M.Matrix[i][i];
+            }
+
+            for(int i=0;i<maxBaris;i++){
+                System.out.println("X"+(i+1)+" : "+x[i]);
+            }
+        }
+        return x;
     }
 
-    /*OBE */
-    public void tukarBaris(int Baris1, int Baris2){
-        double[] temp = Matrix[Baris1];
-        Matrix[Baris1] = Matrix[Baris2];
-        Matrix[Baris2] =temp;
-    }
-
-    public void kaliBaris(int Baris, double k){
-        int i;
-        for (i=0; i<kolom; i++){
-            Matrix[Baris][i] *= k;
-        }
-    }
-
-    public void plusBaris(int Baris1, int Baris2){
-        int i;
-        for (i=0; i<kolom; i++){
-            Matrix[Baris1][i] += Matrix[Baris2][i];
-        }
-    }
-    
-    public void minBaris(int Baris1, int Baris2){
-        int i;
-        for (i=0; i<kolom; i++){
-            Matrix[Baris1][i] += Matrix[Baris2][i];
-        }
-    }
-    /*Augmented */
-    
 }
