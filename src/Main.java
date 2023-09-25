@@ -1,3 +1,4 @@
+import lib.*;
 import java.util.Scanner;
 
 public class Main {
