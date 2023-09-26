@@ -9,7 +9,7 @@ public class Main {
         System.out.println("2. Cramer");
         int pilihan = input.nextInt();
         if(pilihan == 1){
-            Matrix.SPL();
+            SPL.ansSPL();
         }else if (pilihan==2){
             Matrix.cramer();
         }

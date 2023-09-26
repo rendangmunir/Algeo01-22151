@@ -21,6 +21,7 @@ public class Matrix {
         this.kolom = kolom;
     }
 
+
     private static Matrix keyboard(){
         Scanner input = new Scanner(System.in);
         Matrix M = new Matrix(0,0);
@@ -47,11 +48,6 @@ public class Matrix {
             found = true;
             try{
                 fileName = Fileinput.readLine();
-            }
-            catch(IOException e){
-                e.printStackTrace();
-            }
-            try{
                 Scanner file = new Scanner(new File("../test/"+fileName));
                 int br = 0;
                 int kl = 0;
@@ -69,7 +65,7 @@ public class Matrix {
                 }
                 file.close();
             }
-            catch(FileNotFoundException e){
+            catch(IOException e){
                 found = false;
                 e.printStackTrace();
             }
@@ -105,97 +101,25 @@ public class Matrix {
             System.out.println("");
         }
     }
-  
-    public static void SPL(){
-        Scanner input = new Scanner(System.in);
-        System.out.println("Pilih metode yang ingin digunakan");
-        System.out.println("1. Gauss");
-        int pilihan = input.nextInt();
-        double[] x = {};
-        if(pilihan == 1){
-            x = Gauss();
-        }
-    }
 
-    private static double[] Gauss(){
-        double[] x={0};
-        Matrix M = inputMatrix();
-        int maxBaris = M.baris;
-        int maxKolom = M.kolom;
-        x = new double[M.baris];
-
-        for(int k=0;k<maxBaris;k++){
-            double mx_el = M.Matrix[k][k];
-            int mx_row = k;
-            
-            for(int i=k+1;i<maxBaris;i++){
-                if(Math.abs(M.Matrix[i][k]) > mx_el){
-                    mx_el = M.Matrix[i][k];
-                    mx_row = i;
-                }
-            }
-
-            for(int i=0;i<maxKolom;i++){
-                double temp = M.Matrix[k][i];
-                M.Matrix[k][i] = M.Matrix[mx_row][i];
-                M.Matrix[mx_row][i] = temp;
-            }
-
-            for(int i=k+1;i<maxBaris;i++){
-                double fact = M.Matrix[i][k] / M.Matrix[k][k];
-
-                for(int j = k+1; j<maxKolom ;j++){
-                    M.Matrix[i][j] -= fact * M.Matrix[k][j];
-                }
-                M.Matrix[i][k] = 0;
-            }
-        }
-        // cek solusi banyak & gaada solusi
-        boolean solBanyak = false;
-        boolean minSolusi = false;
-        boolean cek = true;
-        int j=0;
-        while(cek && j<maxKolom-1){
-            if(M.Matrix[maxBaris-1][j]!=0){
-                cek = false;
-            }
-            j++;
-        }
-
-        if(cek){
-            if(M.Matrix[maxBaris-1][maxKolom-1]!=0){
-                minSolusi = true;
-            }
-            else{
-                solBanyak = true;
-            }
-        }
-
-        if(solBanyak){
-            System.out.println("SPL ini memiliki banyak solusi");
-        }
-        else if(minSolusi){
-            System.out.println("SPL ini tidak memiliki solusi");
-        }
-        else{
-            for(int i=maxBaris-1;i>=0;i--){
-                double tmp = M.Matrix[i][maxKolom-1];
-                for(int k=i+1;k<maxBaris;k++){
-                    tmp+=x[k]*M.Matrix[i][k]*-1;
-                }
-                x[i] = tmp/M.Matrix[i][i];
-            }
-
-            System.out.println("Hasil SPL menggunakan metode gauss sebagai berikut");
-            for(int i=0;i<maxBaris;i++){
-                System.out.print("X"+(i+1)+" : ");
-                System.out.format("%.6f",x[i]);
-                System.out.println("");
-            }
-        }
-        return x;
-    }
     /*Operasi Matrix */
+
+    public static int getBaris(Matrix M){
+        return M.baris;
+    }
+
+    public static int getKolom(Matrix M){
+        return M.kolom;
+    }
+
+    public static double getElmt(Matrix M,int i,int j){
+        return M.Matrix[i][j];
+    }
+
+    public static void inputElmt(Matrix M,int i,int j,double value){
+        M.Matrix[i][j] = value;
+    }
+
     public static Matrix dotPMatrix(Matrix M, double k){
         Matrix out = new Matrix(M.baris, M.kolom);
         int i,j;
