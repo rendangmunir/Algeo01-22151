@@ -151,6 +151,26 @@ public class Matrix {
         
     }
 
+    public static Matrix minor(Matrix M, int i, int j){
+        Matrix out = new Matrix(M.baris-1, M.kolom-1);
+        int im, jm;
+        im=0;
+        for (int ii=0; ii<M.baris; ii++){
+            if(ii!=i){
+                jm=0;
+                for (int jj=0; jj<M.kolom; jj++){
+                    if (jj!=j){
+                        out.Matrix[im][jm]=M.Matrix[ii][jj];
+                        jm++;
+                    }
+                }
+                im++;
+            }
+        }
+        return out;
+    }
+    /*Testing minor */
+    
     /*OBE */
     public void tukarBaris(int Baris1, int Baris2){
         double[] temp = Matrix[Baris1];
@@ -219,66 +239,12 @@ public class Matrix {
         return out;
     }
 
-    /* Determinan */
-    public static double Determinan(Matrix M) {
-        Matrix N = copyMatrix(M);
-
-        // Proses mengurutkan baris
-        int[] zeroCount = new int[N.baris];
-        int swapCount = 0;
-        for (int i = 0; i < N.baris; i++) { // Kalkulasi jumlah 0
-            zeroCount[i] = 0;
-            int j = 0;
-            while (j < N.kolom && N.Matrix[i][j] == 0) {
-                zeroCount[i]++;
-                j++;
-            }
-        }
-        for (int i = 0; i < N.baris; i++) { // Algoritma Pengurutan
-            for (int j = 0; j < N.baris - 1; j++) {
-                if (zeroCount[j] > zeroCount[j + 1]) {
-                    int temp;
-                    N.tukarBaris(j, j + 1);
-                    swapCount++;
-                    temp = zeroCount[j];
-                    zeroCount[j] = zeroCount[j + 1];
-                    zeroCount[j + 1] = temp;
-                }
-            }
-        }
-        // Proses mereduksi baris
-        int indent = 0;
-
-        for (int i = 0; i < N.baris; i++) {
-            // Mencari sel bernilai
-            while (i + indent < N.kolom && N.Matrix[i][i + indent] == 0) {
-                indent++;
-            }
-
-            if (i + indent < N.kolom) {
-                // Pengurangan baris dibawahnya
-                for (int j = i + 1; j < N.baris; j++) {
-                    N.minBaris(j, i, N.Matrix[j][i + indent] / N.Matrix[i][i + indent]);
-
-                }
-            }
-        }
-
-        // Proses menghitung jumlah diagonal
-        double det = N.Matrix[0][0];
-        for (int i = 1; i < N.baris && i<N.kolom; i++) {
-            det *= N.Matrix[i][i];
-        }
-        det *= ((swapCount & 2) == 0) ? 1 : -1;
-        return det;
-    }
-
     /* Cramer */
     public static void cramer(){
         Matrix M = inputMatrix();
         Matrix A = getA(M);
         Matrix B = getB(M);
-        double DetA = Determinan(A);
+        double DetA = Determinan.detReduksi(A);
         double[] Det = new double[A.kolom];
         double[] X = new double[A.kolom];
         for (int i=0; i<A.kolom; i++){
@@ -287,7 +253,7 @@ public class Matrix {
             for (int j=0; j<A.baris; j++){
                 temp.Matrix[j][i]=B.Matrix[j][0];
                 if (j==A.baris-1){
-                    Det[i]=Determinan(temp);
+                    Det[i]=Determinan.detReduksi(temp);
                 }
             }
         }

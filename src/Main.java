@@ -3,6 +3,9 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Matrix M=Matrix.inputMatrix();
+        System.out.println(Determinan.detReduksi(M));
+        Determinan.detKofaktor(M);
         Scanner input = new Scanner(System.in);
         System.out.println("Menu");
         System.out.println("1. SPL");
