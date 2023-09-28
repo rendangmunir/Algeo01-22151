@@ -9,20 +9,30 @@ import java.util.Scanner;
 
 public class SPL {
 
-   private boolean solBanyak;
+   private String[] ans;
 
-   private boolean minSolusi;
+   private int nEff;
+
+   private String[]x;
 
     
-    public SPL(Matrix M){
-        this.solBanyak = false;
-        this.minSolusi = false;
+    public SPL(){
+        this.ans = new String[99999];
+        this.nEff = 0;
+        this.x = new String[99999];
+    }
+
+    public String[] getSolusispl(SPL spl){
+        return spl.x;
+    }
+
+    public int getNeffspl(SPL spl){
+        return spl.nEff;
     }
 
     private static void eselon(Matrix M){
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
-        double[] x = new double[Matrix.getBaris(M)];
 
         for(int k=0;k<maxBaris;k++){
             double mx_el = Matrix.getElmt(M, k, k);
@@ -99,11 +109,11 @@ public class SPL {
         }
     }
 
-    private static String[] manySolution(Matrix M){
-        Matrix.printMatrix(M);
+    public void manySolution(Matrix M){
         boolean rowZero = true;
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
+        this.nEff = maxBaris;
         int br = maxBaris-1;
         int cntRowzero = 0;
         while(rowZero){
@@ -122,38 +132,35 @@ public class SPL {
             param[i] = "P" + String.valueOf(i+1);
         }
 
-        String[] x = new String[maxBaris];
         for(int i=0;i<maxBaris;i++){
-            x[i] = "";
+            this.x[i] = "";
         }
 
         int cntParam = 0;
         for(int i=maxBaris-1;i>=0;i--){
             if(cntParam != cntRowzero){
-                x[i] = param[cntParam];
+                this.x[i] = param[cntParam];
                 cntParam++;
             }
             else{
-                x[i] = String.valueOf(Matrix.getElmt(M, i, maxKolom-1));
+                this.x[i] = String.valueOf(Matrix.getElmt(M, i, maxKolom-1));
                 for(int j=i+1;j<maxKolom-1;j++){
                     if(Matrix.getElmt(M, i, j) !=0){
-                        x[i] = x[i] + " - " + String.valueOf(Matrix.getElmt(M, i, j)) + x[j]; 
+                        this.x[i] = this.x[i] + " - " + String.valueOf(Matrix.getElmt(M, i, j)) + this.x[j]; 
                     }
                 }
             }
         }
 
-        String[] ans = new String[maxBaris];
         for(int i=0;i<maxBaris;i++){
-            ans[i] = "";
+            this.ans[i] = "";
         }
 
         for(int i=0;i<maxBaris;i++){
-            System.out.print("X"+(i+1)+" = "+x[i]);
-            ans[i] = ans[i] + "X" + (i+1) + " = " + x[i];
+            System.out.print("X"+(i+1)+" = "+this.x[i]);
+            this.ans[i] = this.ans[i] + "X" + (i+1) + " = " + this.x[i];
             System.out.println();
         }
-        return ans;
 
     }
 
@@ -166,12 +173,12 @@ public class SPL {
         System.out.println("2. Gauss Jordan");
         int pilihan = input.nextInt();
         double[] x = {};
-        String[] ans = new String[0];
+        SPL spl = new SPL();
         if(pilihan == 1){
-            ans = Gauss();
+            spl.Gauss();
         }
         else if(pilihan == 2){
-            ans = Gauss_Jordan();
+            spl.Gauss_Jordan();
         }
 
         System.out.println("Apakah hasil SPl ingin anda simpan ?");
@@ -188,9 +195,9 @@ public class SPL {
             try{
                 fileName = Fileinput.readLine();
                 FileWriter file = new FileWriter("../test/"+fileName);
-                int ansLength = ans.length;
+                int ansLength = spl.nEff;
                 for(int i=0;i<ansLength;i++){
-                    file.write(ans[i]);
+                    file.write(spl.ans[i]);
                     file.write("\n");
                 }
                 file.close();
@@ -202,13 +209,12 @@ public class SPL {
         
     }
 
-    private static String[] Gauss(){
+    public void Gauss(){
         double[] x={0};
         Matrix M = Matrix.inputMatrix();
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
         x = new double[maxBaris];
-        String[] ans = {""};
         eselon(M);
         // cek solusi banyak & gaada solusi
         boolean solBanyak = false;
@@ -231,19 +237,18 @@ public class SPL {
             }
         }
         if(solBanyak){
-            ans = new String[maxBaris];
             eselonRed(M);
-            ans =  manySolution(M);
+            manySolution(M);
         }
         else if(minSolusi){
-            ans = new String[1];
+            this.nEff = 1;
             System.out.println("SPL ini tidak memiliki solusi");
-            ans[0] = "SPL ini tidak memiliki solusi" ;
+            this.ans[0] = "SPL ini tidak memiliki solusi" ;
         }
         else{
-            ans = new String[maxBaris];
+            this.nEff = maxBaris;
             for(int i=0;i<maxBaris;i++){
-                ans[i] = "";
+                this.ans[i] = "";
             }
             for(int i=maxBaris-1;i>=0;i--){
                 x[i] = Matrix.getElmt(M, i, maxKolom-1);
@@ -257,19 +262,18 @@ public class SPL {
                 System.out.print("X"+(i+1)+" : ");
                 System.out.format("%.6f",x[i]);
                 System.out.println("");
-                ans[i] = ans[i] + "X" + (i+1) + " : " + String.format("%.6f", x[i]);
+                this.x[i] = String.format("%.6f", x[i]);
+                this.ans[i] = ans[i] + "X" + (i+1) + " : " + this.x[i];
             }
         }
-        return ans;
     }
 
-    private static String[] Gauss_Jordan(){
+    public void Gauss_Jordan(){
         double[] x={0};
         Matrix M = Matrix.inputMatrix();
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
         x = new double[maxBaris];
-        String[] ans = {""};
         eselonRed(M);
          // cek solusi banyak & gaada solusi
         boolean solBanyak = false;
@@ -292,30 +296,30 @@ public class SPL {
             }
         }
         if(solBanyak){
-            ans = new String[maxBaris];
-            ans = manySolution(M);
+            this.nEff = maxBaris;
+            manySolution(M);
         }
 
         else if(minSolusi){
-            ans = new String[1];
+            this.nEff = 1;
             System.out.println("SPL ini tidak memiliki solusi");
-            ans[0] = "SPL ini tidak memiliki solusi";
+            this.ans[0] = "SPL ini tidak memiliki solusi";
         }
 
         else{
-            ans = new String[maxBaris];
+            this.nEff = maxBaris;
             for(int i=0;i<maxBaris;i++){
                 x[i] = Matrix.getElmt(M, i, maxKolom-1);
-                ans[i] = "";
+                this.ans[i] = "";
             }
             System.out.println("Hasil SPL menggunakan metode gauss jordan sebagai berikut");
             for(int i=0;i<maxBaris;i++){
                 System.out.print("X"+(i+1)+" : ");
                 System.out.format("%.6f",x[i]);
                 System.out.println("");
-                ans[i] = ans[i] + "X" + (i+1) + " : " + String.format("%.6f", x[i]);
+                this.x[i] = String.format("%.6f", x[i]);
+                this.ans[i] = ans[i] + "X" + (i+1) + " : " + this.x[i];
             } 
         }
-        return ans;
     }
 }
