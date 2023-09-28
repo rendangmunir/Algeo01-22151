@@ -36,21 +36,27 @@ public class SPL {
             }
 
             for(int i=k+1;i<maxBaris;i++){
-                double fact = Matrix.getElmt(M, i, k) / Matrix.getElmt(M, k, k);
+                if(Matrix.getElmt(M, k, k) != 0){
+                    double fact = Matrix.getElmt(M, i, k) / Matrix.getElmt(M, k, k);
 
-                for(int j = k+1; j<maxKolom ;j++){
-                    Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)-(fact*Matrix.getElmt(M, k, j)));
+                    for(int j = k+1; j<maxKolom ;j++){
+                        Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)-(fact*Matrix.getElmt(M, k, j)));
+                    }
+                    Matrix.inputElmt(M, i, k, 0);
                 }
-                Matrix.inputElmt(M, i, k, 0);
             }
         }
         
 
         for(int i=0;i<maxBaris;i++){
             for(int j=i+1;j<maxKolom;j++){
-                 Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)/(Matrix.getElmt(M, i, i)));     
+                if(Matrix.getElmt(M, i, i) != 0){
+                    Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)/(Matrix.getElmt(M, i, i)));     
+                }
             }
-            Matrix.inputElmt(M,i,i,Matrix.getElmt(M, i, i)/(Matrix.getElmt(M, i, i)));  
+            if(Matrix.getElmt(M, i, i) != 0){
+                Matrix.inputElmt(M,i,i,Matrix.getElmt(M, i, i)/(Matrix.getElmt(M, i, i)));
+            }  
         }
     }
 
@@ -62,25 +68,80 @@ public class SPL {
         while(a<Matrix.getBaris(M)){
             //cek atas
             for(int i=a-1;i>=0;i--){
-                double fact = Matrix.getElmt(M, i, a) / Matrix.getElmt(M, a, a);
+                if(Matrix.getElmt(M, a, a) !=0){
+                    double fact = Matrix.getElmt(M, i, a) / Matrix.getElmt(M, a, a);
 
-                for(int j = a+1; j<maxKolom ;j++){
-                    Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)-(fact*Matrix.getElmt(M, a, j)));
+                    for(int j = a+1; j<maxKolom ;j++){
+                        Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)-(fact*Matrix.getElmt(M, a, j)));
+                    }
+                    Matrix.inputElmt(M, i, a, 0);
                 }
-                Matrix.inputElmt(M, i, a, 0);
             }
 
             //cek bawah
             for(int i=a+1;i<maxBaris;i++){
-                double fact = Matrix.getElmt(M, i, a) / Matrix.getElmt(M, a, a);
+                if(Matrix.getElmt(M, a, a) !=0){
+                    double fact = Matrix.getElmt(M, i, a) / Matrix.getElmt(M, a, a);
 
-                for(int j = a+1; j<maxKolom ;j++){
-                    Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)-(fact*Matrix.getElmt(M, a, j)));
+                    for(int j = a+1; j<maxKolom ;j++){
+                        Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)-(fact*Matrix.getElmt(M, a, j)));
+                    }
+                    Matrix.inputElmt(M, i, a, 0);
                 }
-                Matrix.inputElmt(M, i, a, 0);
             }
             a++;
         }
+    }
+
+    private static void manySolution(Matrix M){
+        Matrix.printMatrix(M);
+        boolean rowZero = true;
+        int maxBaris = Matrix.getBaris(M);
+        int maxKolom = Matrix.getKolom(M);
+        int br = maxBaris-1;
+        int cntRowzero = 0;
+        while(rowZero){
+            for(int j=0;j<maxKolom;j++){
+                if(Matrix.getElmt(M,br,j)!=0){
+                rowZero = false;
+                }
+            }
+            if(rowZero){
+                cntRowzero++;
+            }
+            br--;
+        }
+        String[] param = new String[cntRowzero];
+        for(int i=0;i<cntRowzero;i++){
+            param[i] = "P" + String.valueOf(i+1);
+        }
+
+        String[] x = new String[maxBaris];
+        for(int i=0;i<maxBaris;i++){
+            x[i] = "";
+        }
+
+        int cntParam = 0;
+        for(int i=maxBaris-1;i>=0;i--){
+            if(cntParam != cntRowzero){
+                x[i] = param[cntParam];
+                cntParam++;
+            }
+            else{
+                x[i] = String.valueOf(Matrix.getElmt(M, i, maxKolom-1));
+                for(int j=i+1;j<maxKolom-1;j++){
+                    if(Matrix.getElmt(M, i, j) !=0){
+                        x[i] = x[i] + " - " + String.valueOf(Matrix.getElmt(M, i, j)) + x[j]; 
+                    }
+                }
+            }
+        }
+
+        for(int i=0;i<maxBaris;i++){
+            System.out.print("X"+(i+1)+"= "+x[i]);
+            System.out.println();
+        }
+
     }
 
   
@@ -125,9 +186,9 @@ public class SPL {
                 solBanyak = true;
             }
         }
-
         if(solBanyak){
-            System.out.println("SPL ini memiliki banyak solusi");
+            eselonRed(M);
+            manySolution(M);
         }
         else if(minSolusi){
             System.out.println("SPL ini tidak memiliki solusi");
@@ -156,15 +217,44 @@ public class SPL {
         int maxKolom = Matrix.getKolom(M);
         x = new double[maxBaris];
         eselonRed(M);
-        for(int i=0;i<maxBaris;i++){
-            x[i] = Matrix.getElmt(M, i, maxKolom-1);
+         // cek solusi banyak & gaada solusi
+        boolean solBanyak = false;
+        boolean minSolusi = false;
+        boolean cek = true;
+        int j=0;
+        while(cek && j<maxKolom-1){
+            if(Matrix.getElmt(M,maxBaris-1,j)!=0){
+                cek = false;
+            }
+            j++;
         }
 
-        System.out.println("Hasil SPL menggunakan metode gauss jordan sebagai berikut");
-        for(int i=0;i<maxBaris;i++){
-            System.out.print("X"+(i+1)+" : ");
-            System.out.format("%.6f",x[i]);
-            System.out.println("");
-        } 
+        if(cek){
+            if(Matrix.getElmt(M,maxBaris-1,maxKolom-1)!=0){
+                minSolusi = true;
+            }
+            else{
+                solBanyak = true;
+            }
+        }
+        if(solBanyak){
+            manySolution(M);
+        }
+
+        else if(minSolusi){
+            System.out.println("SPL ini tidak memiliki solusi");
+        }
+
+        else{
+            for(int i=0;i<maxBaris;i++){
+                x[i] = Matrix.getElmt(M, i, maxKolom-1);
+            }
+            System.out.println("Hasil SPL menggunakan metode gauss jordan sebagai berikut");
+            for(int i=0;i<maxBaris;i++){
+                System.out.print("X"+(i+1)+" : ");
+                System.out.format("%.6f",x[i]);
+                System.out.println("");
+            } 
+        }
     }
 }
