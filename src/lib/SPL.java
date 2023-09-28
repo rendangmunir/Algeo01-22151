@@ -1,5 +1,10 @@
 package lib;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class SPL {
@@ -7,6 +12,7 @@ public class SPL {
    private boolean solBanyak;
 
    private boolean minSolusi;
+
     
     public SPL(Matrix M){
         this.solBanyak = false;
@@ -93,7 +99,7 @@ public class SPL {
         }
     }
 
-    private static void manySolution(Matrix M){
+    private static String[] manySolution(Matrix M){
         Matrix.printMatrix(M);
         boolean rowZero = true;
         int maxBaris = Matrix.getBaris(M);
@@ -137,34 +143,72 @@ public class SPL {
             }
         }
 
+        String[] ans = new String[maxBaris];
         for(int i=0;i<maxBaris;i++){
-            System.out.print("X"+(i+1)+"= "+x[i]);
+            ans[i] = "";
+        }
+
+        for(int i=0;i<maxBaris;i++){
+            System.out.print("X"+(i+1)+" = "+x[i]);
+            ans[i] = ans[i] + "X" + (i+1) + " = " + x[i];
             System.out.println();
         }
+        return ans;
 
     }
 
   
     public static void ansSPL(){
         Scanner input = new Scanner(System.in);
+        BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Pilih metode yang ingin digunakan");
         System.out.println("1. Gauss");
         System.out.println("2. Gauss Jordan");
         int pilihan = input.nextInt();
         double[] x = {};
+        String[] ans = new String[0];
         if(pilihan == 1){
-            Gauss();
+            ans = Gauss();
         }
         else if(pilihan == 2){
-            Gauss_Jordan();
+            ans = Gauss_Jordan();
         }
+
+        System.out.println("Apakah hasil SPl ingin anda simpan ?");
+        System.out.println("1. Ya");
+        System.out.println("2. Tidak");
+        pilihan = input.nextInt();
+        while(pilihan != 1 && pilihan != 2 ){
+            System.out.println("Masukan salah silahkan ulangi!");
+            pilihan = input.nextInt();
+        }
+        if(pilihan == 1){
+            System.out.print("Masukkan nama file: ");
+            String fileName = "";
+            try{
+                fileName = Fileinput.readLine();
+                FileWriter file = new FileWriter("../test/"+fileName);
+                int ansLength = ans.length;
+                for(int i=0;i<ansLength;i++){
+                    file.write(ans[i]);
+                    file.write("\n");
+                }
+                file.close();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+        
     }
 
-    private static void Gauss(){
+    private static String[] Gauss(){
         double[] x={0};
         Matrix M = Matrix.inputMatrix();
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
+        x = new double[maxBaris];
+        String[] ans = {""};
         eselon(M);
         // cek solusi banyak & gaada solusi
         boolean solBanyak = false;
@@ -187,13 +231,20 @@ public class SPL {
             }
         }
         if(solBanyak){
+            ans = new String[maxBaris];
             eselonRed(M);
-            manySolution(M);
+            ans =  manySolution(M);
         }
         else if(minSolusi){
+            ans = new String[1];
             System.out.println("SPL ini tidak memiliki solusi");
+            ans[0] = "SPL ini tidak memiliki solusi" ;
         }
         else{
+            ans = new String[maxBaris];
+            for(int i=0;i<maxBaris;i++){
+                ans[i] = "";
+            }
             for(int i=maxBaris-1;i>=0;i--){
                 x[i] = Matrix.getElmt(M, i, maxKolom-1);
                 for(int k=i+1;k<maxBaris;k++){
@@ -206,16 +257,19 @@ public class SPL {
                 System.out.print("X"+(i+1)+" : ");
                 System.out.format("%.6f",x[i]);
                 System.out.println("");
+                ans[i] = ans[i] + "X" + (i+1) + " : " + String.format("%.6f", x[i]);
             }
         }
+        return ans;
     }
 
-    private static void Gauss_Jordan(){
+    private static String[] Gauss_Jordan(){
         double[] x={0};
         Matrix M = Matrix.inputMatrix();
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
         x = new double[maxBaris];
+        String[] ans = {""};
         eselonRed(M);
          // cek solusi banyak & gaada solusi
         boolean solBanyak = false;
@@ -238,23 +292,30 @@ public class SPL {
             }
         }
         if(solBanyak){
-            manySolution(M);
+            ans = new String[maxBaris];
+            ans = manySolution(M);
         }
 
         else if(minSolusi){
+            ans = new String[1];
             System.out.println("SPL ini tidak memiliki solusi");
+            ans[0] = "SPL ini tidak memiliki solusi";
         }
 
         else{
+            ans = new String[maxBaris];
             for(int i=0;i<maxBaris;i++){
                 x[i] = Matrix.getElmt(M, i, maxKolom-1);
+                ans[i] = "";
             }
             System.out.println("Hasil SPL menggunakan metode gauss jordan sebagai berikut");
             for(int i=0;i<maxBaris;i++){
                 System.out.print("X"+(i+1)+" : ");
                 System.out.format("%.6f",x[i]);
                 System.out.println("");
+                ans[i] = ans[i] + "X" + (i+1) + " : " + String.format("%.6f", x[i]);
             } 
         }
+        return ans;
     }
 }
