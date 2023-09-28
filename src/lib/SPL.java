@@ -176,10 +176,12 @@ public class SPL {
         double[] x = {};
         SPL spl = new SPL();
         if(pilihan == 1){
-            spl.Gauss();
+            Matrix M = Matrix.inputMatrix();
+            spl.Gauss(M);
         }
         else if(pilihan == 2){
-            spl.Gauss_Jordan();
+            Matrix M = Matrix.inputMatrix();
+            spl.Gauss_Jordan(M);
         }
         //else if (pilihan == 3){
         //     ans= cramer();
@@ -213,9 +215,8 @@ public class SPL {
         
     }
 
-    public void Gauss(){
+    public void Gauss(Matrix M){
         double[] x={0};
-        Matrix M = Matrix.inputMatrix();
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
         x = new double[maxBaris];
@@ -272,9 +273,8 @@ public class SPL {
         }
     }
 
-    public void Gauss_Jordan(){
+    public void Gauss_Jordan(Matrix M){
         double[] x={0};
-        Matrix M = Matrix.inputMatrix();
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
         x = new double[maxBaris];
