@@ -30,7 +30,7 @@ public class SPL {
         return spl.nEff;
     }
 
-    private static void eselon(Matrix M){
+    public static void eselon(Matrix M){
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
 
@@ -76,7 +76,7 @@ public class SPL {
         }
     }
 
-    private static void eselonRed(Matrix M){
+    public static void eselonRed(Matrix M){
         eselon(M);
         int a=0;
         int maxBaris = Matrix.getBaris(M);
