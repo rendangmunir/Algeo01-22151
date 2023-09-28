@@ -164,6 +164,7 @@ public class SPL {
         System.out.println("Pilih metode yang ingin digunakan");
         System.out.println("1. Gauss");
         System.out.println("2. Gauss Jordan");
+        System.out.println("3. Kaidah Cramer");
         int pilihan = input.nextInt();
         double[] x = {};
         String[] ans = new String[0];
@@ -172,6 +173,8 @@ public class SPL {
         }
         else if(pilihan == 2){
             ans = Gauss_Jordan();
+        }else if (pilihan == 3){
+            ans= cramer();
         }
 
         System.out.println("Apakah hasil SPl ingin anda simpan ?");
@@ -317,5 +320,33 @@ public class SPL {
             } 
         }
         return ans;
+    }
+    
+    public static String[] cramer(){
+        Matrix M = Matrix.inputMatrix();
+        Matrix A = Matrix.getA(M);
+        Matrix B = Matrix.getB(M);
+        String[] ans = {""};
+        double DetA = Determinan.detReduksi(A);
+        double[] Det = new double[Matrix.getKolom(A)];
+        double[] X = new double[Matrix.getKolom(A)];
+        for (int i=0; i<Matrix.getKolom(A); i++){
+            Matrix temp = new Matrix(Matrix.getBaris(A), Matrix.getKolom(A));
+            temp=Matrix.getA(M);
+            for (int j=0; j<Matrix.getBaris(A); j++){
+                Matrix.inputElmt(temp, i, j, Matrix.getElmt(B,j,0));
+                if (j==Matrix.getBaris(A)-1){
+                    Det[i]=Determinan.detReduksi(temp);
+                }
+            }
+        }
+        for (int i=0; i<Matrix.getKolom(A); i++){
+            X[i]=(double)Det[i]/DetA;
+            System.out.print("X"+(i+1)+" : ");
+            System.out.format("%.6f",X[i]);
+            System.out.println("");
+            ans[i] = ans[i] + "X" + (i+1) + " : " + String.format("%.6f", X[i]);
+        }
+
     }
 }
