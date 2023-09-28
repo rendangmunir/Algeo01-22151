@@ -1,5 +1,11 @@
 package lib;
 
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
 public class Determinan {
     public static double detReduksi(Matrix M) {
         Matrix N = Matrix.copyMatrix(M);
@@ -63,4 +69,64 @@ public class Determinan {
         //System.out.println("Determinan = "+ det);
         return det;
     }
+    public static  String[] detReduksi(){
+        Matrix M = Matrix.inputMatrix();
+        String[] ans = new String[1];
+        double det = detReduksi(M);
+        System.out.println("Determinan = "+ det);
+        ans[0]="Determinan = " + String.valueOf(det);
+        return ans;
+    }
+    public static  String[] detKofaktor(){
+        Matrix M = Matrix.inputMatrix();
+        String[] ans = new String[1];
+        double det = detKofaktor(M);
+        System.out.println("Determinan = "+ det);
+        ans[0]="Determinan = " + String.valueOf(det);
+        return ans;
+    }
+
+    public static void ansDet(){
+        Scanner input = new Scanner(System.in);
+        BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Pilih metode yang ingin digunakan");
+        System.out.println("1. Metode Reduksi Baris");
+        System.out.println("2. Metode Kofaktor");
+        int pilihan = input.nextInt();
+        String[] ans = {""};
+        if(pilihan == 1){
+            ans = detReduksi();
+        }
+        else if(pilihan == 2){
+            ans = detKofaktor();
+        }
+
+        System.out.println("Apakah hasil Determinan ingin anda simpan ?");
+        System.out.println("1. Ya");
+        System.out.println("2. Tidak");
+        pilihan = input.nextInt();
+        while(pilihan != 1 && pilihan != 2 ){
+            System.out.println("Masukan salah silahkan ulangi!");
+            pilihan = input.nextInt();
+        }
+        if(pilihan == 1){
+            System.out.print("Masukkan nama file: ");
+            String fileName = "";
+            try{
+                fileName = Fileinput.readLine();
+                FileWriter file = new FileWriter("../test/"+fileName);
+                int ansLength = ans.length;
+                for(int i=0;i<ansLength;i++){
+                    file.write(ans[i]);
+                    file.write("\n");
+                }
+                file.close();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+        
+    }
+
 }

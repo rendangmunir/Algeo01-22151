@@ -48,7 +48,7 @@ public class Matrix {
             found = true;
             try{
                 fileName = Fileinput.readLine();
-                Scanner file = new Scanner(new File("../test/"+fileName));
+                Scanner file = new Scanner(new File("..\\test\\"+fileName));
                 int br = 0;
                 int kl = 0;
                 while(file.hasNextLine()){

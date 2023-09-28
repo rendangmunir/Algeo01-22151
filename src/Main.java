@@ -9,12 +9,12 @@ public class Main {
         Scanner input = new Scanner(System.in);
         System.out.println("Menu");
         System.out.println("1. SPL");
-        System.out.println("2. Cramer");
+        System.out.println("2. Determinan");
         int pilihan = input.nextInt();
         if(pilihan == 1){
             SPL.ansSPL();
         }else if (pilihan==2){
-            Matrix.cramer();
+            Determinan.ansDet();
         }
     }
 }

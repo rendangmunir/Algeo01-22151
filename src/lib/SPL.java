@@ -164,6 +164,7 @@ public class SPL {
         System.out.println("Pilih metode yang ingin digunakan");
         System.out.println("1. Gauss");
         System.out.println("2. Gauss Jordan");
+        System.out.println("3. Kaidah Cramer");
         int pilihan = input.nextInt();
         double[] x = {};
         String[] ans = new String[0];
@@ -173,6 +174,9 @@ public class SPL {
         else if(pilihan == 2){
             ans = Gauss_Jordan();
         }
+        //else if (pilihan == 3){
+        //     ans= cramer();
+        // }
 
         System.out.println("Apakah hasil SPl ingin anda simpan ?");
         System.out.println("1. Ya");
