@@ -261,8 +261,6 @@ public class Matrix {
             X[i]=(double)Det[i]/DetA;
             System.out.println("X" + (i+1) + " : " + X[i]);
         }
-
-
     }
     
 }

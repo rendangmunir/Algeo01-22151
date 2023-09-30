@@ -10,11 +10,14 @@ public class Main {
         System.out.println("Menu");
         System.out.println("1. SPL");
         System.out.println("2. Determinan");
+        System.out.println("3. Regresi Linear Berganda");
         int pilihan = input.nextInt();
         if(pilihan == 1){
             SPL.ansSPL();
         }else if (pilihan==2){
             Determinan.ansDet();
+        }else if (pilihan==3){
+            Regresi.regresiLinearBerganda();
         }
     }
 }

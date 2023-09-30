@@ -126,7 +126,5 @@ public class Determinan {
                 e.printStackTrace();
             }
         }
-        
     }
-
 }
