@@ -29,6 +29,7 @@ public class Regresi {
             }
         }
         //SPL kan matrix normal (bikin fungsi Gauss(Matrix)->Matrix)
+        
         Matrix ans = SPL.Gauss(normal);
         System.out.println("Persamaan Linear :");
         System.out.print("Y = ");
