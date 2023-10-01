@@ -11,9 +11,9 @@ public class SPL {
 
    private String[] ans;
 
-   private int nEff;
+   int nEff;
 
-   private String[]x;
+   String[]x;
 
     
     public SPL(){

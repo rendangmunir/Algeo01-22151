@@ -12,6 +12,7 @@ public class Main {
         System.out.println("2. Determinan");
         System.out.println("3. Regresi Linear Berganda");
         System.out.println("4. Bicubic Spline Interpolation");
+        System.out.println("5. Interpolasi Polinomial");
         int pilihan = input.nextInt();
         if(pilihan == 1){
             SPL.ansSPL();
@@ -21,6 +22,8 @@ public class Main {
             Regresi.regresiLinearBerganda();
         }else if (pilihan==4){
             Bicubic.solveBicubic();
+        }else if (pilihan==5){
+            Interpolasi.solveInterpolasi();
         }
     }
 }
