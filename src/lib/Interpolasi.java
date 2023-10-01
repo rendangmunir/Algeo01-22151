@@ -2,6 +2,7 @@ package lib;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
@@ -12,6 +13,7 @@ public class Interpolasi {
     public static void solveInterpolasi(){
         // input
         Scanner input = new Scanner(System.in);
+        BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
         double[] x ={0};
         double[] y ={0};
         double X =0;
@@ -38,7 +40,6 @@ public class Interpolasi {
             X = input.nextDouble();
         }
         else if(pilihan == 2){
-            BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
             boolean found = false;
             String fileName = "";
             while(!found){
@@ -106,5 +107,27 @@ public class Interpolasi {
         }
         ans+=", f("+String.valueOf(X)+")"+" = "+String.valueOf(p);
         System.out.println(ans);
+
+        System.out.println("Apakah hasil Interpolasi ingin anda simpan ?");
+        System.out.println("1. Ya");
+        System.out.println("2. Tidak");
+        pilihan = input.nextInt();
+        while(pilihan != 1 && pilihan != 2 ){
+            System.out.println("Masukan salah silahkan ulangi!");
+            pilihan = input.nextInt();
+        }
+        if(pilihan == 1){
+            System.out.print("Masukkan nama file: ");
+            String fileName = "";
+            try{
+                fileName = Fileinput.readLine();
+                FileWriter file = new FileWriter("../test/"+fileName);
+                file.write(ans);
+                file.close();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+        }
     }
 }
