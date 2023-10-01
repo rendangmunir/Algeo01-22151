@@ -118,7 +118,9 @@ public class Determinan {
                 int ansLength = ans.length;
                 for(int i=0;i<ansLength;i++){
                     file.write(ans[i]);
-                    file.write("\n");
+                    if (i<ansLength-1){
+                        file.write("\n");
+                    }
                 }
                 file.close();
             }

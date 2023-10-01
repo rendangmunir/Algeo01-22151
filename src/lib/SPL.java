@@ -187,9 +187,9 @@ public class SPL {
         else if(pilihan == 3){
             spl.splInvers();
         }
-        //else if (pilihan == 3){
-        //     ans= cramer();
-        // }
+        else if (pilihan == 4){
+            spl.cramer();
+        }
 
         System.out.println("Apakah hasil SPl ingin anda simpan ?");
         System.out.println("1. Ya");
@@ -396,7 +396,7 @@ public class SPL {
         }
 
         // Melakukan operasi Gauss-Jordan 
-        double hasilGaussJordan[][] = Gauss_Jordan(result); //memanggil fungsi Gauss_jordan
+        Matrix hasilGaussJordan = Gauss_Jordan(result); //memanggil fungsi Gauss_jordan
        
 
         //ambil matrix invers
@@ -434,5 +434,30 @@ public class SPL {
             System.out.println("x" + (i+1) + "= " + X[i]);
         }
 
+    }
+    /* Cramer */
+    public void cramer(){
+        Matrix M = Matrix.inputMatrix();
+        Matrix A = Matrix.getA(M);
+        Matrix B = Matrix.getB(M);
+        double DetA = Determinan.detReduksi(A);
+        double[] Det = new double[Matrix.getKolom(A)];
+        double[] X = new double[Matrix.getKolom(A)];
+        for (int i=0; i<Matrix.getKolom(A); i++){
+            Matrix temp = new Matrix(Matrix.getBaris(A), Matrix.getKolom(A));
+            temp=Matrix.getA(M);
+            for (int j=0; j<Matrix.getBaris(A); j++){
+                Matrix.inputElmt(temp, j, i, Matrix.getElmt(B,j,0));
+                if (j==Matrix.getBaris(A)-1){
+                    Det[i]=Determinan.detReduksi(temp);
+                }
+            }
+        }
+        this.nEff=Matrix.getKolom(A);
+        for (int i=0; i<Matrix.getKolom(A); i++){
+            X[i]=(double)Det[i]/DetA;
+            System.out.println("X" + (i+1) + " : " + X[i]);
+            this.ans[i]="X"+(i+1)+" : "+ String.valueOf(X[i]);
+        }
     }
 }

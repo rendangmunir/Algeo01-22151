@@ -1,8 +1,33 @@
 package lib;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class Invers {
+    private String[] ansinv;
+
+    int nEff;
+
+    String[]x;
+
+    
+    public Invers (){
+        this.ansinv = new String[99999];
+        this.nEff = 0;
+        this.x = new String[99999];
+    }
+
+    public String[] getSolusispl(Invers spl){
+        return spl.x;
+    }
+
+    public int getNeffspl(Invers spl){
+        return spl.nEff;
+    }
     
     public static Matrix identitas(int i) {
         Matrix M = new Matrix(i, i);
@@ -34,7 +59,7 @@ public class Invers {
         return ans;
     }
 
-    public static void invers(Matrix M0) {
+    public void invers(Matrix M0) {
         Matrix id = identitas(Matrix.getBaris(M0));
         Matrix M = konkat(M0, id);
         int maxBaris = Matrix.getBaris(M0);
@@ -54,14 +79,26 @@ public class Invers {
 
         if (cek){
             System.out.println("Matriks tidak memiliki balikan");
+            this.nEff=1;
+            this.ansinv[0]="Matriks tidak memiliki balikan";
         }else{
+            this.nEff=Matrix.getBaris(M);
+            for (int x=0; x<this.nEff; x++){
+                this.ansinv[x]="";
+            }
+            System.out.println("Matrix Invers : ");
             for (int p=0; p<Matrix.getBaris(M); p++){
                 for (int q=maxKolom; q<Matrix.getKolom(M); q++){
                     Matrix.inputElmt(ans, p, q-maxKolom, Matrix.getElmt(M, p, q));
+                    System.out.format("%.6f", Matrix.getElmt(ans,p,q-maxKolom));
+                    this.ansinv[p]+=String.format("%.6f", Matrix.getElmt(ans,p,q-maxKolom));
+                    if (q<Matrix.getKolom(M)-1){
+                        System.out.print(" ");
+                        this.ansinv[p]+=" ";
+                    }
                 }
+                System.out.print("\n");
             }
-            System.out.println("Matrix Invers : ");
-            Matrix.printMatrix(ans);
         }
     }
     
@@ -75,42 +112,92 @@ public class Invers {
         return N;
     }
 
-    public static void adjoin(Matrix M){
+    public void adjoin(Matrix M){
         double det = Determinan.detReduksi(M);
-        Matrix adj = new Matrix(Matrix.getBaris(M), Matrix.getKolom(M));
-        int sign=1;
-        for (int i=0; i<Matrix.getBaris(adj); i++){
-            for (int j=0; j<Matrix.getKolom(adj); j++){
-                Matrix.inputElmt(adj,i,j, sign*Determinan.detReduksi(Matrix.minor(M,i,j)));
-                if (Matrix.getKolom(adj)%2==0){
-                    if(j==Matrix.getKolom(adj)-1){
-                        sign*=1;
+        if (det==0){
+            System.out.println("Matrix tidak memiliki balikan");
+            this.nEff=1;
+            this.ansinv[0]="Matriks tidak memiliki balikan";
+        }else{
+            Matrix adj = new Matrix(Matrix.getBaris(M), Matrix.getKolom(M));
+            int sign=1;
+            for (int i=0; i<Matrix.getBaris(adj); i++){
+                for (int j=0; j<Matrix.getKolom(adj); j++){
+                    Matrix.inputElmt(adj,i,j, sign*Determinan.detReduksi(Matrix.minor(M,i,j)));
+                    if (Matrix.getKolom(adj)%2==0){
+                        if(j==Matrix.getKolom(adj)-1){
+                            sign*=1;
+                        }else{
+                            sign*=-1;
+                        }
                     }else{
                         sign*=-1;
                     }
-                }else{
-                    sign*=-1;
                 }
             }
+            Matrix ans = transpose(adj);
+            ans.dotPMatrix(1/det);
+            this.nEff=Matrix.getBaris(ans);
+            for (int x=0; x<this.nEff; x++){
+                this.ansinv[x]="";
+            }
+            System.out.println("Matrix Invers : ");
+            for (int i=0; i<Matrix.getBaris(ans);i++){
+                for (int j=0; j<Matrix.getKolom(ans); j++){
+                    System.out.format("%.6f", Matrix.getElmt(ans,i,j));
+                    this.ansinv[i]+=String.format("%.6f", Matrix.getElmt(ans,i,j));
+                    if (j<Matrix.getKolom(M)-1){
+                        System.out.print(" ");
+                        this.ansinv[i]+=" ";
+                    }
+                }
+                System.out.print("\n");
+            }
         }
-        Matrix ans = transpose(adj);
-        ans.dotPMatrix(1/det);
-        System.out.println("Matrix Invers : ");
-        Matrix.printMatrix(ans);
     }
 
     public static void inversMatrix(){
         Scanner input = new Scanner(System.in);
+        BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Pilih metode yang digunakan");
         System.out.println("1. Matriks balikan");
         System.out.println("2. Adjoin");
         int pilihan = input.nextInt();
+        Invers inv = new Invers();
         if (pilihan==1){
             Matrix M = Matrix.inputMatrix();
-            Invers.invers(M);
+            inv.invers(M);
         }else{
             Matrix M = Matrix.inputMatrix();
-            Invers.adjoin(M);
+            inv.adjoin(M);
+        }
+
+        System.out.println("Apakah hasil Invers ingin anda simpan ?");
+        System.out.println("1. Ya");
+        System.out.println("2. Tidak");
+        pilihan = input.nextInt();
+        while(pilihan != 1 && pilihan != 2 ){
+            System.out.println("Masukan salah silahkan ulangi!");
+            pilihan = input.nextInt();
+        }
+        if(pilihan == 1){
+            System.out.print("Masukkan nama file: ");
+            String fileName = "";
+            try{
+                fileName = Fileinput.readLine();
+                FileWriter file = new FileWriter("../test/"+fileName);
+                int ansLength = inv.nEff;
+                for(int i=0;i<ansLength;i++){
+                    file.write(inv.ansinv[i]);
+                    if (i<ansLength-1){
+                        file.write("\n");
+                    }
+                }
+                file.close();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
         }
     }
 }

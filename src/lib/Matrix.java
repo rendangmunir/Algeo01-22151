@@ -238,29 +238,5 @@ public class Matrix {
         }
         return out;
     }
-
-    /* Cramer */
-    public static void cramer(){
-        Matrix M = inputMatrix();
-        Matrix A = getA(M);
-        Matrix B = getB(M);
-        double DetA = Determinan.detReduksi(A);
-        double[] Det = new double[A.kolom];
-        double[] X = new double[A.kolom];
-        for (int i=0; i<A.kolom; i++){
-            Matrix temp = new Matrix(A.baris, A.kolom);
-            temp=getA(M);
-            for (int j=0; j<A.baris; j++){
-                temp.Matrix[j][i]=B.Matrix[j][0];
-                if (j==A.baris-1){
-                    Det[i]=Determinan.detReduksi(temp);
-                }
-            }
-        }
-        for (int i=0; i<A.kolom; i++){
-            X[i]=(double)Det[i]/DetA;
-            System.out.println("X" + (i+1) + " : " + X[i]);
-        }
-    }
     
 }
