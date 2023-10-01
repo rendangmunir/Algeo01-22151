@@ -351,7 +351,7 @@ public class SPL {
             double inversA[][] = new double [baris][baris];
             double B[] = new double [baris];
             double  X[] = new double  [baris];
-            I[][] = new double[baris][baris]; //jumlah kolom dan baris matrix I sama
+            double I[][] = new double[baris][baris]; //jumlah kolom dan baris matrix I sama
             double result[][] = new double [baris][kolom+kolom];
 
             //input matriks A
