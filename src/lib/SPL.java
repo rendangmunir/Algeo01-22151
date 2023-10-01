@@ -171,7 +171,8 @@ public class SPL {
         System.out.println("Pilih metode yang ingin digunakan");
         System.out.println("1. Gauss");
         System.out.println("2. Gauss Jordan");
-        System.out.println("3. Kaidah Cramer");
+        System.out.println("3. Matriks Balikan");
+        System.out.println("4. Kaidah Cramer");
         int pilihan = input.nextInt();
         double[] x = {};
         SPL spl = new SPL();
@@ -182,6 +183,9 @@ public class SPL {
         else if(pilihan == 2){
             Matrix M = Matrix.inputMatrix();
             spl.Gauss_Jordan(M);
+        }
+        else if(pilihan == 3){
+            spl.splInvers();
         }
         //else if (pilihan == 3){
         //     ans= cramer();
