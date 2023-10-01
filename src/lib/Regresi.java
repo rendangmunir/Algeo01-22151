@@ -9,40 +9,13 @@ public class Regresi {
         int maxKolom = Matrix.getKolom(M);
         x = new double[maxBaris];
         SPL.eselon(M);
-        // cek solusi banyak & gaada solusi
-        boolean solBanyak = false;
-        boolean minSolusi = false;
-        boolean cek = true;
-        int j=0;
-        while(cek && j<maxKolom-1){
-            if(Matrix.getElmt(M,maxBaris-1,j)!=0){
-                cek = false;
-            }
-            j++;
-        }
-
-        if(cek){
-            if(Matrix.getElmt(M,maxBaris-1,maxKolom-1)!=0){
-                minSolusi = true;
-            }
-            else{
-                solBanyak = true;
+        for(int i=maxBaris-1;i>=0;i--){
+            x[i] = Matrix.getElmt(M, i, maxKolom-1);
+            for(int k=i+1;k<maxBaris;k++){
+                x[i]+=x[k]*Matrix.getElmt(M, i, k)*-1;
             }
         }
-        if(solBanyak){
-            SPL.eselonRed(M);
-            //SPL.manySolution(M);
-        }
-        else if(minSolusi){
-        }
-        else{
-            for(int i=maxBaris-1;i>=0;i--){
-                x[i] = Matrix.getElmt(M, i, maxKolom-1);
-                for(int k=i+1;k<maxBaris;k++){
-                    x[i]+=x[k]*Matrix.getElmt(M, i, k)*-1;
-                }
-            }
-        }
+        Matrix.printMatrix(M);
         return x;
     }
     public static void regresiLinearBerganda() {
