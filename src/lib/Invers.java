@@ -19,6 +19,7 @@ public class Invers {
         this.ansinv = new String[99999];
         this.nEff = 0;
         this.x = new String[99999];
+
     }
 
     public String[] getSolusispl(Invers spl){
@@ -59,7 +60,7 @@ public class Invers {
         return ans;
     }
 
-    public void invers(Matrix M0) {
+    public Matrix invers(Matrix M0) {
         Matrix id = identitas(Matrix.getBaris(M0));
         Matrix M = konkat(M0, id);
         int maxBaris = Matrix.getBaris(M0);
@@ -100,6 +101,7 @@ public class Invers {
                 System.out.print("\n");
             }
         }
+        return ans;
     }
     
     public static Matrix transpose(Matrix M){

@@ -2,6 +2,7 @@ package lib;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
@@ -122,7 +123,56 @@ public class Bicubic {
         }
 
         //invers X
-        //cari a
+        Invers inv = new Invers();
+        Matrix invX = inv.invers(X);
+        //cari Matrix A
+        Matrix A = Matrix.crossMatrix(invX, f);
+        //ubah Matrix A ke 4x4
+        Matrix A4x4 = new Matrix(4, 4);
+        int cnt = 0;
+        for(int i=0;i<4;i++){
+            for(int j=0;j<4;j++){
+                Matrix.inputElmt(A4x4, j, i, Matrix.getElmt(A, cnt, 0));
+                cnt++;
+            }
+
+        }
         //hitung f(a,b)
+        double ans =0;
+        for(int j=0;j<4;j++){
+            for(int i=0;i<4;i++){
+                ans += Matrix.getElmt(A4x4, i, j) * Math.pow(a,i) * Math.pow(a,j);
+            }
+        }
+        
+        // simpan output
+        Scanner input = new Scanner(System.in);
+        BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
+        String ansStr = "f("+a+","+b+")"+" = "+String.valueOf(ans);
+        System.out.println(ansStr);
+
+        System.out.println("Apakah hasil Bicubic Spline Interpolation ingin anda simpan ?");
+        System.out.println("1. Ya");
+        System.out.println("2. Tidak");
+        int pilihan = input.nextInt();
+        while(pilihan != 1 && pilihan != 2 ){
+            System.out.println("Masukan salah silahkan ulangi!");
+            pilihan = input.nextInt();
+        }
+        if(pilihan == 1){
+            System.out.print("Masukkan nama file: ");
+            String fileName = "";
+            try{
+                fileName = Fileinput.readLine();
+                FileWriter file = new FileWriter("../test/"+fileName);
+                file.write(ansStr);
+                file.close();
+            }
+            catch(IOException e){
+                e.printStackTrace();
+            }
+        }
+
+
     }
 }

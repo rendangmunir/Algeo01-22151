@@ -184,9 +184,9 @@ public class SPL {
             Matrix M = Matrix.inputMatrix();
             spl.Gauss_Jordan(M);
         }
-        else if(pilihan == 3){
-            spl.splInvers();
-        }
+        // else if(pilihan == 3){
+        //     spl.splInvers();
+        // }
         else if (pilihan == 4){
             spl.cramer();
         }
@@ -331,110 +331,110 @@ public class SPL {
         }
     }
 
-    //SPL METODE MATRIKS BALIKAN
+    // //SPL METODE MATRIKS BALIKAN
 
-    //menggunakan inputan matrix A dan B 
-    //matrix A merupakan konstanta variabel SPL
-    //matrix B merupakan hasil persamaan SPL
-    //matrix A akan di invers
+    // //menggunakan inputan matrix A dan B 
+    // //matrix A merupakan konstanta variabel SPL
+    // //matrix B merupakan hasil persamaan SPL
+    // //matrix A akan di invers
 
-    public static void splInvers() 
-    {
-        Scanner input = new Scanner(System.in);
+    // public static void splInvers() 
+    // {
+    //     Scanner input = new Scanner(System.in);
 
-        //input jumlah baris dan kolom
-        System.out.print("Baris = ");
-        int baris = input.nextInt();
-        System.out.print("Kolom = ");
-        int kolom = input.nextInt();
+    //     //input jumlah baris dan kolom
+    //     System.out.print("Baris = ");
+    //     int baris = input.nextInt();
+    //     System.out.print("Kolom = ");
+    //     int kolom = input.nextInt();
 
-        //deklarasi matriks 
-        double A[][] = new double [baris] [kolom];
-        double inversA[][] = new double [baris][baris];
-        double B[] = new double [baris];
-        double  X[] = new double  [baris];
-        double I[][] = new double[baris][baris]; //jumlah kolom dan baris matrix I sama
-        double result[][] = new double [baris][kolom+kolom];
+    //     //deklarasi matriks 
+    //     double A[][] = new double [baris] [kolom];
+    //     double inversA[][] = new double [baris][baris];
+    //     double B[] = new double [baris];
+    //     double  X[] = new double  [baris];
+    //     double I[][] = new double[baris][baris]; //jumlah kolom dan baris matrix I sama
+    //     double result[][] = new double [baris][kolom+kolom];
 
-        //input matriks A
-        for (int i = 0; i < baris; i++)
-        {
-            for (int j = 0; j < kolom; j++)
-            {
-                System.out.print("Masukkan nilai Matrix A baris ke-" + (i+1) + " dan kolom ke-" + (j+1) + "= ");
-                A[i][j]=input.nextDouble();
-            }
-        }
+    //     //input matriks A
+    //     for (int i = 0; i < baris; i++)
+    //     {
+    //         for (int j = 0; j < kolom; j++)
+    //         {
+    //             System.out.print("Masukkan nilai Matrix A baris ke-" + (i+1) + " dan kolom ke-" + (j+1) + "= ");
+    //             A[i][j]=input.nextDouble();
+    //         }
+    //     }
         
-        //inisialisasi matrix identitas
-        for (int i = 0; i < baris; i++) 
-        {
-            for (int j = 0; j < kolom; j++) 
-            {
-                if (i == j) 
-                {
-                    I[i][j] = 1;
-                } 
-                else 
-                {
-                    I[i][j] = 0;
-                }
-            }
-        }
+    //     //inisialisasi matrix identitas
+    //     for (int i = 0; i < baris; i++) 
+    //     {
+    //         for (int j = 0; j < kolom; j++) 
+    //         {
+    //             if (i == j) 
+    //             {
+    //                 I[i][j] = 1;
+    //             } 
+    //             else 
+    //             {
+    //                 I[i][j] = 0;
+    //             }
+    //         }
+    //     }
 
-        //menambahkan matrix A dengan matrix identitas
-        for (int i = 0; i < baris; i++)
-        {
-            for (int j = 0; j < kolom; j++)
-            {
-                result[i][j] = A[i][j];
-            }
-            for (int j = 0; j < kolom; j++)
-            {
-                result[i][kolom + j] = I[i][j];
-            }
-        }
+    //     //menambahkan matrix A dengan matrix identitas
+    //     for (int i = 0; i < baris; i++)
+    //     {
+    //         for (int j = 0; j < kolom; j++)
+    //         {
+    //             result[i][j] = A[i][j];
+    //         }
+    //         for (int j = 0; j < kolom; j++)
+    //         {
+    //             result[i][kolom + j] = I[i][j];
+    //         }
+    //     }
 
-        // Melakukan operasi Gauss-Jordan 
-        Matrix hasilGaussJordan = Gauss_Jordan(result); //memanggil fungsi Gauss_jordan
+    //     // Melakukan operasi Gauss-Jordan 
+    //     Matrix hasilGaussJordan = Gauss_Jordan(result); //memanggil fungsi Gauss_jordan
        
 
-        //ambil matrix invers
-        for (int i = 0; i < baris; i++) 
-        {
-            for (int j = 0; j < baris; j++) 
-            {
-                inversA[i][j] = hasilGaussJordan[i][kolom + j];
-            }
-        }
+    //     //ambil matrix invers
+    //     for (int i = 0; i < baris; i++) 
+    //     {
+    //         for (int j = 0; j < baris; j++) 
+    //         {
+    //             inversA[i][j] = hasilGaussJordan[i][kolom + j];
+    //         }
+    //     }
 
-        //input matriks B
-        for (int i = 0; i < baris; i++)
-        {
-            System.out.print("Masukkan nilai matrix B baris ke-" + (i+1) + " dan kolom ke-1 = ");
-            B[i]=input.nextDouble();
-        }
+    //     //input matriks B
+    //     for (int i = 0; i < baris; i++)
+    //     {
+    //         System.out.print("Masukkan nilai matrix B baris ke-" + (i+1) + " dan kolom ke-1 = ");
+    //         B[i]=input.nextDouble();
+    //     }
 
-        //solusi SPL
-        System.out.println("solusi spl = ");
+    //     //solusi SPL
+    //     System.out.println("solusi spl = ");
 
-        for (int i = 0; i < baris; i++)
-        {
-            double kali = 0.0;
-            for (int j = 0; j < kolom; j++)
-            {
-                kali += inversA[i][j] * B[j];
-            }
-            X[i] = kali;
-        }
+    //     for (int i = 0; i < baris; i++)
+    //     {
+    //         double kali = 0.0;
+    //         for (int j = 0; j < kolom; j++)
+    //         {
+    //             kali += inversA[i][j] * B[j];
+    //         }
+    //         X[i] = kali;
+    //     }
 
-        //tampilkan solusi SPL
-        for (int i = 0; i < baris; i++)
-        {
-            System.out.println("x" + (i+1) + "= " + X[i]);
-        }
+    //     //tampilkan solusi SPL
+    //     for (int i = 0; i < baris; i++)
+    //     {
+    //         System.out.println("x" + (i+1) + "= " + X[i]);
+    //     }
 
-    }
+    // }
     /* Cramer */
     public void cramer(){
         Matrix M = Matrix.inputMatrix();
