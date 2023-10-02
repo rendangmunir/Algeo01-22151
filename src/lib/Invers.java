@@ -22,13 +22,6 @@ public class Invers {
 
     }
 
-    public String[] getSolusispl(Invers spl){
-        return spl.x;
-    }
-
-    public int getNeffspl(Invers spl){
-        return spl.nEff;
-    }
     
     public static Matrix identitas(int i) {
         Matrix M = new Matrix(i, i);
@@ -61,8 +54,10 @@ public class Invers {
     }
 
     public Matrix invers(Matrix M0) {
+        //mengembalikan Matrix invers, jika tidak ada invers mengembalikan matrix 1x1 dengan elemen(0,0) bernilai 0
         Matrix id = identitas(Matrix.getBaris(M0));
         Matrix M = konkat(M0, id);
+        Matrix ans;
         int maxBaris = Matrix.getBaris(M0);
         int maxKolom = Matrix.getKolom(M0);
         SPL.eselonRed(M);
@@ -70,19 +65,21 @@ public class Invers {
         // cek solusi banyak & gaada solusi
         boolean cek = true;
         int j=0;
-        Matrix ans = new Matrix(maxBaris, maxKolom);
         while(cek && j<maxKolom){
             if(Matrix.getElmt(M,maxBaris-1,j)!=0){
                 cek = false;
             }
             j++;
         }
-
+        
         if (cek){
             System.out.println("Matriks tidak memiliki balikan");
             this.nEff=1;
             this.ansinv[0]="Matriks tidak memiliki balikan";
+            ans = identitas(1);
+            Matrix.inputElmt(ans,0,0,0);
         }else{
+            ans = new Matrix(maxBaris, maxKolom);
             this.nEff=Matrix.getBaris(M);
             for (int x=0; x<this.nEff; x++){
                 this.ansinv[x]="";
@@ -113,13 +110,17 @@ public class Invers {
         }
         return N;
     }
-
-    public void adjoin(Matrix M){
+    
+    public Matrix adjoin(Matrix M){
+        //mengembalikan Matrix invers, jika tidak ada invers mengembalikan matrix 1x1 dengan elemen(0,0) bernilai 0
         double det = Determinan.detReduksi(M);
+        Matrix ans;
         if (det==0){
             System.out.println("Matrix tidak memiliki balikan");
             this.nEff=1;
             this.ansinv[0]="Matriks tidak memiliki balikan";
+            ans = identitas(1);
+            Matrix.inputElmt(ans,0,0,0);
         }else{
             Matrix adj = new Matrix(Matrix.getBaris(M), Matrix.getKolom(M));
             int sign=1;
@@ -137,7 +138,7 @@ public class Invers {
                     }
                 }
             }
-            Matrix ans = transpose(adj);
+            ans = transpose(adj);
             ans.dotPMatrix(1/det);
             this.nEff=Matrix.getBaris(ans);
             for (int x=0; x<this.nEff; x++){
@@ -156,6 +157,41 @@ public class Invers {
                 System.out.print("\n");
             }
         }
+        return ans;
+    }
+
+    private static Matrix keyboard(){
+        Scanner input = new Scanner(System.in);
+        Matrix M = new Matrix(0,0);
+        System.out.print("Masukkan jumlah baris/kolom : ");
+        int br = input.nextInt();
+        M = new Matrix(br,br) ;
+        for(int i=0;i<br;i++){
+            for(int j=0;j<br;j++){
+                Matrix.inputElmt(M,i,j, input.nextDouble());
+            }
+        }
+        return M;
+    }
+
+    public static Matrix inputMatrix(){
+        Scanner input = new Scanner(System.in);
+        Matrix M = new Matrix(0, 0);
+        System.out.println("Pilih cara input :");
+        System.out.println("1. Input dari keyboard");
+        System.out.println("2. Input dari file");
+        int pilihan = input.nextInt();
+        while(pilihan != 1 && pilihan != 2){
+            System.out.println("Input salah,silahkan ulangi");
+            pilihan = input.nextInt();
+        }
+        if(pilihan == 1){
+            M = Invers.keyboard();
+        }
+        else if(pilihan == 2){
+            M = Matrix.inputFile();
+        }
+        return M;
     }
 
     public static void inversMatrix(){
@@ -167,10 +203,10 @@ public class Invers {
         int pilihan = input.nextInt();
         Invers inv = new Invers();
         if (pilihan==1){
-            Matrix M = Matrix.inputMatrix();
+            Matrix M = inputMatrix();
             inv.invers(M);
         }else{
-            Matrix M = Matrix.inputMatrix();
+            Matrix M = inputMatrix();
             inv.adjoin(M);
         }
 

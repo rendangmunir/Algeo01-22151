@@ -1,6 +1,7 @@
 package lib;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,7 +24,73 @@ public class Regresi {
         return x;
     }
     public static void regresiLinearBerganda() {
-        Matrix M = Matrix.inputMatrix();
+        // input
+        Scanner input = new Scanner(System.in);
+        BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Pilih cara input :");
+        System.out.println("1. Input dari keyboard");
+        System.out.println("2. Input dari file");
+        Matrix M = new Matrix(0,0);
+        double[] xbaru = {0};
+        int pil=0;
+        int pilihan = input.nextInt();
+        while(pilihan != 1 && pilihan != 2){
+            System.out.println("Input salah,silahkan ulangi");
+            pilihan = input.nextInt();
+        }
+        if(pilihan == 1){
+            pil=1;
+            System.out.print("Masukkan banyak data : ");
+            int br = input.nextInt();
+            System.out.print("Masukkan jumlah variabel peubah : ");
+            int kl =input.nextInt()+1;
+            M = new Matrix(br, kl);
+            for(int i=0;i<br;i++){
+                for(int j=0;j<kl;j++){
+                    Matrix.inputElmt(M, i, j, input.nextDouble());;
+                }
+            }
+        }
+        else if(pilihan == 2){
+            M = new Matrix(0, 0);
+            boolean found = false;
+            String fileName = "";
+            while(!found){
+                System.out.print("Masukkan nama file: ");
+                found = true;
+                try{
+                    fileName = Fileinput.readLine();
+                    Scanner file = new Scanner(new File("..\\test\\"+fileName));
+                    int br = 0;
+                    int kl = 0;
+                    while(file.hasNextLine()){
+                        br++;
+                        kl = file.nextLine().split(" ").length;
+                    }
+                    br--;
+                    kl++;
+                    file.close();
+                    M = new Matrix(br, kl);
+                    file = new Scanner(new File("../test/"+fileName));
+                    for(int i=0;i<br;i++){
+                        for(int j=0;j<kl;j++){
+                            Matrix.inputElmt(M, i, j, file.nextDouble());
+                        }
+                    }
+                    xbaru = new double[kl];
+                    xbaru[0]=1;
+                    for (int i=1; i<kl;i++){
+                        xbaru[i]=file.nextDouble(); 
+                        System.out.println(xbaru[i]);
+                    }
+                    file.close();
+                }
+                catch(IOException e){
+                    found = false;
+                    e.printStackTrace();
+                }
+            }
+        }
         Matrix normal = new Matrix(Matrix.getKolom(M), Matrix.getKolom(M)+1);
         //Membuat Normal estimation matrix
         for (int i=0; i<Matrix.getBaris(normal); i++){
@@ -52,6 +119,7 @@ public class Regresi {
         int len = ans.length;
         String[] strans = new String[2];
         for (int m=0; m<2; m++){
+            System.out.println(xbaru[0]);
             strans[m]="";
         }
         System.out.println("Persamaan Linear :");
@@ -71,26 +139,33 @@ public class Regresi {
             }
         }
         System.out.print("\n");
-        System.out.println("Masukkan X baru : ");
-        Scanner input = new Scanner(System.in);
-        int kol = ans.length;
-        double[] xbaru = new double[kol];
-        double yn = 0;
-        xbaru[0]=1;
-        for(int i=1;i<kol;i++){
-            xbaru[i] = input.nextDouble();
+        if (pil ==1){
+            System.out.println("Masukkan X baru : ");
+            int kol = ans.length;
+            xbaru = new double[kol];
+            double yn = 0;
+            xbaru[0]=1;
+            for(int i=1;i<kol;i++){
+                xbaru[i] = input.nextDouble();
+            }
+            for (int i=0;i<len;i++){
+                yn+=ans[i]*xbaru[i];
+            }
+            System.out.println(yn);
+            strans[1]+=String.valueOf(yn);
+        }else{
+            double yn = 0;
+            for (int i=0;i<len;i++){
+                yn+=ans[i]*xbaru[i];
+            }
+            System.out.println(yn);
+            strans[1]+=String.valueOf(yn);
         }
-        for (int i=0;i<len;i++){
-            yn+=ans[i]*xbaru[i];
-        }
-        System.out.println(yn);
-        strans[1]+=String.valueOf(yn);
 
-        BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Apakah hasil Regresi ingin anda simpan ?");
         System.out.println("1. Ya");
         System.out.println("2. Tidak");
-        int pilihan = input.nextInt();
+        pilihan = input.nextInt();
         while(pilihan != 1 && pilihan != 2 ){
             System.out.println("Masukan salah silahkan ulangi!");
             pilihan = input.nextInt();

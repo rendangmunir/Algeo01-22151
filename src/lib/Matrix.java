@@ -37,8 +37,8 @@ public class Matrix {
         }
         return M;
     }
-
-    private static Matrix inputFile(){
+    
+    public static Matrix inputFile(){
         BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
         Matrix M = new Matrix(0, 0);
         boolean found = false;
