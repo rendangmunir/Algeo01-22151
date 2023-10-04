@@ -81,7 +81,7 @@ public class Regresi {
                     xbaru[0]=1;
                     for (int i=1; i<kl;i++){
                         xbaru[i]=file.nextDouble(); 
-                        System.out.println(xbaru[i]);
+                        //System.out.println(xbaru[i]);
                     }
                     file.close();
                 }
@@ -119,7 +119,7 @@ public class Regresi {
         int len = ans.length;
         String[] strans = new String[2];
         for (int m=0; m<2; m++){
-            System.out.println(xbaru[0]);
+            //System.out.println(xbaru[0]);
             strans[m]="";
         }
         System.out.println("Persamaan Linear :");
@@ -169,11 +169,13 @@ public class Regresi {
             strans[1]+="f(";
             for (int i=0;i<len;i++){
                 yn+=ans[i]*xbaru[i];
-                strans[0]+=String.valueOf(xbaru[i]);
-                strans[1]+=String.valueOf(xbaru[i]);
-                if (i<len-1){
-                    strans[0]+=", ";
-                    strans[1]+=", ";
+                if (i>0){
+                    strans[0]+=String.valueOf(xbaru[i]);
+                    strans[1]+=String.valueOf(xbaru[i]);
+                    if (i<len-1){
+                        strans[0]+=", ";
+                        strans[1]+=", ";
+                    }
                 }
             }
             strans[0]+=") = "+String.valueOf(yn);
