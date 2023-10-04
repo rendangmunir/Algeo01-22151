@@ -147,19 +147,38 @@ public class Regresi {
             xbaru[0]=1;
             for(int i=1;i<kol;i++){
                 xbaru[i] = input.nextDouble();
+                if (i==1){
+                    strans[0]+=", f(" + String.valueOf(xbaru[i]);
+                    strans[1]+="f(" + String.valueOf(xbaru[i]);
+                }else{
+                    strans[0]+=", " + String.valueOf(xbaru[i]);
+                    strans[1]+=", " + String.valueOf(xbaru[i]);
+                }
             }
+            strans[0]+=") = ";
+            strans[1]+=") = ";
             for (int i=0;i<len;i++){
                 yn+=ans[i]*xbaru[i];
             }
-            System.out.println(yn);
+            strans[0]+=String.valueOf(yn);
             strans[1]+=String.valueOf(yn);
+            System.out.println(strans[1]);
         }else{
             double yn = 0;
+            strans[0]+=", f(";
+            strans[1]+="f(";
             for (int i=0;i<len;i++){
                 yn+=ans[i]*xbaru[i];
+                strans[0]+=String.valueOf(xbaru[i]);
+                strans[1]+=String.valueOf(xbaru[i]);
+                if (i<len-1){
+                    strans[0]+=", ";
+                    strans[1]+=", ";
+                }
             }
-            System.out.println(yn);
-            strans[1]+=String.valueOf(yn);
+            strans[0]+=") = "+String.valueOf(yn);
+            strans[1]+=") = "+String.valueOf(yn);
+            System.out.println(strans[1]);
         }
 
         System.out.println("Apakah hasil Regresi ingin anda simpan ?");
@@ -176,8 +195,8 @@ public class Regresi {
             try{
                 fileName = Fileinput.readLine();
                 FileWriter file = new FileWriter("../test/"+fileName);
-                int ansLength = strans.length;
-                for(int i=0;i<ansLength;i++){
+                int ansLength = 1;
+                for(int i=0;i<1;i++){
                     file.write(strans[i]);
                     if (i<ansLength-1){
                         file.write("\n");
