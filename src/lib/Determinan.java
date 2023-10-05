@@ -61,12 +61,18 @@ public class Determinan {
     }
     public static double detKofaktor(Matrix M){
         //Menghitung determinan dengan metode kofaktor
-        double sign=1;
+        int sign;
+        int maxBaris = Matrix.getBaris(M);
         double det;
-        det=0;
-        for (int j=0; j<Matrix.getBaris(M); j++){
-            det+=Matrix.getElmt(M, 0, j)*(Determinan.detReduksi(Matrix.minor(M,0,j)))*sign;
-            sign*=-1;
+        if (maxBaris==1){
+            det=Matrix.getElmt(M, 0, 0);
+        }else if (maxBaris==2){
+            det=Matrix.getElmt(M, 0, 0)*Matrix.getElmt(M, 1, 1) - Matrix.getElmt(M, 0, 1)*Matrix.getElmt(M, 1, 0);
+        }else{
+            det=0;
+            for (int j=0; j<Matrix.getBaris(M); j++){
+                det+=Matrix.getElmt(M, 0, j)*(Determinan.detKofaktor(Matrix.minor(M,0,j)))*(j%2==1? -1 : 1);
+            }
         }
         return det;
     }
