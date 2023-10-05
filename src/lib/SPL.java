@@ -377,12 +377,17 @@ public class SPL {
     }
     /* Cramer */
     public void cramer(){
+        //Menyelesaikan spl dengan kaidah cramer
+        //Prekondisi : SPL dengan n peubah dan n persamaan
         Matrix M = Matrix.inputMatrix();
+        //Pisahkan A dan B dari bentuk Ax=b
         Matrix A = Matrix.getA(M);
         Matrix B = Matrix.getB(M);
+        //Cari det A
         double DetA = Determinan.detReduksi(A);
         double[] Det = new double[Matrix.getKolom(A)];
         double[] X = new double[Matrix.getKolom(A)];
+        //Cari det1,det2,..detn
         for (int i=0; i<Matrix.getKolom(A); i++){
             Matrix temp = new Matrix(Matrix.getBaris(A), Matrix.getKolom(A));
             temp=Matrix.getA(M);
@@ -393,6 +398,7 @@ public class SPL {
                 }
             }
         }
+        //Tampilkan hasil SPL
         this.nEff=Matrix.getKolom(A);
         for (int i=0; i<Matrix.getKolom(A); i++){
             X[i]=(double)Det[i]/DetA;

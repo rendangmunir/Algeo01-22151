@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Determinan {
     public static double detReduksi(Matrix M) {
+        //Mencari determinan dengan reduksi baris
         Matrix N = Matrix.copyMatrix(M);
 
         // Proses mengurutkan baris
@@ -59,6 +60,7 @@ public class Determinan {
         return det;
     }
     public static double detKofaktor(Matrix M){
+        //Menghitung determinan dengan metode kofaktor
         double sign=1;
         double det;
         det=0;
@@ -66,10 +68,10 @@ public class Determinan {
             det+=Matrix.getElmt(M, 0, j)*(Determinan.detReduksi(Matrix.minor(M,0,j)))*sign;
             sign*=-1;
         }
-        //System.out.println("Determinan = "+ det);
         return det;
     }
     public static  String[] detReduksi(){
+        //Tampilkan determinan dan simpan jawaban ke bentuk string
         Matrix M = Matrix.inputMatrix();
         String[] ans = new String[1];
         double det = detReduksi(M);
@@ -78,6 +80,7 @@ public class Determinan {
         return ans;
     }
     public static  String[] detKofaktor(){
+        //Tampilkan determinan dan simpan jawaban ke bentuk string
         Matrix M = Matrix.inputMatrix();
         String[] ans = new String[1];
         double det = detKofaktor(M);
@@ -87,6 +90,7 @@ public class Determinan {
     }
 
     public static void ansDet(){
+        //Driver determinan
         Scanner input = new Scanner(System.in);
         BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Pilih metode yang ingin digunakan");

@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class Regresi {
     public static double[] gaussReg(Matrix M){
+        //Mengembalikan nilai-nilai x1,x2,... dari Matrix M dengan metode gauss
         double[] x={0};
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
@@ -20,11 +21,9 @@ public class Regresi {
                 x[i]+=x[k]*Matrix.getElmt(M, i, k)*-1;
             }
         }
-        //Matrix.printMatrix(M);
         return x;
     }
     public static void regresiLinearBerganda() {
-        // input
         Scanner input = new Scanner(System.in);
         BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Pilih cara input :");
@@ -114,14 +113,14 @@ public class Regresi {
                 }
             }
         }
-        //SPL kan matrix normal (bikin fungsi Gauss(Matrix)->Matrix)
+        //SPL kan matrix normal
         double[] ans = gaussReg(normal);
         int len = ans.length;
         String[] strans = new String[2];
         for (int m=0; m<2; m++){
-            //System.out.println(xbaru[0]);
             strans[m]="";
         }
+        //Tampilkan Persamaan linear
         System.out.println("Persamaan Linear :");
         System.out.print("f(x) = ");
         strans[0]+="f(x) = ";
@@ -140,6 +139,7 @@ public class Regresi {
         }
         System.out.print("\n");
         if (pil ==1){
+            //Input x1,x2,... baru
             System.out.println("Masukkan X baru : ");
             int kol = ans.length;
             xbaru = new double[kol];
@@ -157,9 +157,11 @@ public class Regresi {
             }
             strans[0]+=") = ";
             strans[1]+=") = ";
+            //Hitung y baru
             for (int i=0;i<len;i++){
                 yn+=ans[i]*xbaru[i];
             }
+            //simpan jawaban dalam bentuk string
             strans[0]+=String.valueOf(yn);
             strans[1]+=String.valueOf(yn);
             System.out.println(strans[1]);

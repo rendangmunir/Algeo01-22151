@@ -14,7 +14,7 @@ public class Invers {
 
     String[]x;
 
-    
+    //ADT Invers
     public Invers (){
         this.ansinv = new String[99999];
         this.nEff = 0;
@@ -24,6 +24,7 @@ public class Invers {
 
     
     public static Matrix identitas(int i) {
+        //Mengembalikan matrix identitas ixi
         Matrix M = new Matrix(i, i);
         for(int j=0;j<Matrix.getBaris(M); j++){
             for (int k=0;k<Matrix.getKolom(M);k++){
@@ -38,7 +39,7 @@ public class Invers {
     }
 
     public static Matrix konkat(Matrix M1, Matrix M2){
-        //Prekondisi dimensi M1 dan M2 sama
+        //Prekondisi baris M1 dan M2 sama
         Matrix ans = new Matrix(Matrix.getBaris(M2), Matrix.getKolom(M2)*2);
         for (int i=0; i<Matrix.getBaris(ans); i++){
             for (int j=0; j<Matrix.getKolom(ans); j++){
@@ -61,8 +62,7 @@ public class Invers {
         int maxBaris = Matrix.getBaris(M0);
         int maxKolom = Matrix.getKolom(M0);
         SPL.eselonRed(M);
-        //Matrix.printMatrix(M);
-        // cek solusi banyak & gaada solusi
+        // cek apakah ada baris yang berisi 0 semua
         boolean cek = true;
         int j=0;
         while(cek && j<maxKolom){
@@ -84,6 +84,7 @@ public class Invers {
             for (int x=0; x<this.nEff; x++){
                 this.ansinv[x]="";
             }
+            //Masukkan hasil dari OBE ke matrix ans
             System.out.println("Matrix Invers : ");
             for (int p=0; p<Matrix.getBaris(M); p++){
                 for (int q=maxKolom; q<Matrix.getKolom(M); q++){
@@ -102,6 +103,7 @@ public class Invers {
     }
     
     public static Matrix transpose(Matrix M){
+        //Mengembalikan transpose dari matrix M
         Matrix N = new Matrix(Matrix.getKolom(M), Matrix.getBaris(M));
         for (int i=0; i<Matrix.getBaris(N); i++){
             for (int j=0; j<Matrix.getKolom(N); j++){
@@ -115,6 +117,7 @@ public class Invers {
         //mengembalikan Matrix invers, jika tidak ada invers mengembalikan matrix 1x1 dengan elemen(0,0) bernilai 0
         double det = Determinan.detReduksi(M);
         Matrix ans;
+        //cek apakah det=0 jika true matrix tidak memiliki balikan karena nilai 1/det tidak terdefinisi
         if (det==0){
             System.out.println("Matrix tidak memiliki balikan");
             this.nEff=1;
@@ -144,6 +147,7 @@ public class Invers {
             for (int x=0; x<this.nEff; x++){
                 this.ansinv[x]="";
             }
+            //Tampilkan hasil invers
             System.out.println("Matrix Invers : ");
             for (int i=0; i<Matrix.getBaris(ans);i++){
                 for (int j=0; j<Matrix.getKolom(ans); j++){
@@ -161,6 +165,7 @@ public class Invers {
     }
 
     private static Matrix keyboard(){
+        //Menerima masukan dari keyboard berupa n, a11,a12,...a(n-1)(n-1)
         Scanner input = new Scanner(System.in);
         Matrix M = new Matrix(0,0);
         System.out.print("Masukkan jumlah baris/kolom : ");
@@ -175,6 +180,7 @@ public class Invers {
     }
 
     public static Matrix inputMatrix(){
+        //Fungsi untuk Menerima input matrix
         Scanner input = new Scanner(System.in);
         Matrix M = new Matrix(0, 0);
         System.out.println("Pilih cara input :");
@@ -195,6 +201,7 @@ public class Invers {
     }
 
     public static void inversMatrix(){
+        //driver Invers
         Scanner input = new Scanner(System.in);
         BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Pilih metode yang digunakan");

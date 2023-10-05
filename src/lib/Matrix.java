@@ -152,6 +152,7 @@ public class Matrix {
     }
 
     public static Matrix minor(Matrix M, int i, int j){
+        //Mengembailkan minor  dari elemen M[i,j]
         Matrix out = new Matrix(M.baris-1, M.kolom-1);
         int im, jm;
         im=0;
@@ -220,6 +221,7 @@ public class Matrix {
     }
     /* Augmented */
     public static Matrix getA(Matrix M){
+        //Mengembalikan Matrix A dari bentuk Ax=b
         Matrix out = new Matrix(M.baris, M.kolom-1);
         for (int i=0; i<out.baris; i++){
             for (int j=0; j<out.kolom; j++){
@@ -228,8 +230,9 @@ public class Matrix {
         }
         return out;
     }
-
+    
     public static Matrix getB(Matrix M){
+        //Mengembalikan Matrix B dari bentuk Ax=b
         Matrix out = new Matrix(M.baris, 1);
         for (int i=0; i<out.baris; i++){
             for (int j=0; j<out.kolom; j++){
