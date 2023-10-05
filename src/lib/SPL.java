@@ -124,8 +124,8 @@ public class SPL {
                                 param[k] = "P" + String.valueOf(num);
                                 this.ans[k] = "X" + String.valueOf(k+1) + " = " + String.valueOf(param[k]);
                             }
-                            if(Matrix.getElmt(M,i, k) > 0) tmp += (tmp.length() == 0 ? "" : " - ") + (Math.abs(Matrix.getElmt(M,i, k)) != 1.0 ? Double.toString(Math.abs(Matrix.getElmt(M,i, k))) : "") + param[k];
-                            else tmp += (tmp.length() == 0 ? "" : " + ") + (Math.abs(Matrix.getElmt(M,i, k)) != 1.0 ? Double.toString(Math.abs(Matrix.getElmt(M,i, k))) : "") + param[k];
+                            if(Matrix.getElmt(M,i, k) > 0) tmp += (tmp.length() == 0 ? "" : " - ") + (Math.abs(Matrix.getElmt(M,i, k)) != 1.0 ? String.valueOf(Math.abs(Matrix.getElmt(M,i, k))) : "") + param[k];
+                            else tmp += (tmp.length() == 0 ? "" : " + ") + (Math.abs(Matrix.getElmt(M,i, k)) != 1.0 ? String.valueOf(Math.abs(Matrix.getElmt(M,i, k))) : "") + param[k];
 
                         }
                     }
