@@ -36,7 +36,7 @@ public class SPL {
 
         // OBE
         for(int k=0;k<maxBaris;k++){
-            double mx_el = Matrix.getElmt(M, k, k);
+            double mx_el = Matrix.getElmt(M, k, 0);
             int mx_row = k;
             
             for(int i=k+1;i<maxBaris;i++){
@@ -371,7 +371,7 @@ public class SPL {
             }
         }else{
             this.nEff=1;
-            this.ans[0]="Solusi parametrik";
+            this.ans[0]="Tidak Bisa menggunakan metode invers, Matrix balikan tidak ada";
         }
         
     }
@@ -385,24 +385,29 @@ public class SPL {
         Matrix B = Matrix.getB(M);
         //Cari det A
         double DetA = Determinan.detReduksi(A);
-        double[] Det = new double[Matrix.getKolom(A)];
-        double[] X = new double[Matrix.getKolom(A)];
-        //Cari det1,det2,..detn
-        for (int i=0; i<Matrix.getKolom(A); i++){
-            Matrix temp = new Matrix(Matrix.getBaris(A), Matrix.getKolom(A));
-            temp=Matrix.getA(M);
-            for (int j=0; j<Matrix.getBaris(A); j++){
-                Matrix.inputElmt(temp, j, i, Matrix.getElmt(B,j,0));
-                if (j==Matrix.getBaris(A)-1){
-                    Det[i]=Determinan.detReduksi(temp);
+        if (Matrix.getKolom(A)==Matrix.getBaris(A) && DetA!=0){
+            double[] Det = new double[Matrix.getKolom(A)];
+            double[] X = new double[Matrix.getKolom(A)];
+            //Cari det1,det2,..detn
+            for (int i=0; i<Matrix.getKolom(A); i++){
+                Matrix temp = new Matrix(Matrix.getBaris(A), Matrix.getKolom(A));
+                temp=Matrix.getA(M);
+                for (int j=0; j<Matrix.getBaris(A); j++){
+                    Matrix.inputElmt(temp, j, i, Matrix.getElmt(B,j,0));
+                    if (j==Matrix.getBaris(A)-1){
+                        Det[i]=Determinan.detReduksi(temp);
+                    }
                 }
             }
-        }
-        //Tampilkan hasil SPL
-        this.nEff=Matrix.getKolom(A);
-        for (int i=0; i<Matrix.getKolom(A); i++){
-            X[i]=(double)Det[i]/DetA;
-            this.ans[i]="X"+(i+1)+" : "+ String.format("%.6f", X[i]);
+            //Tampilkan hasil SPL
+            this.nEff=Matrix.getKolom(A);
+            for (int i=0; i<Matrix.getKolom(A); i++){
+                X[i]=(double)Det[i]/DetA;
+                this.ans[i]="X"+(i+1)+" : "+ String.format("%.6f", X[i]);
+            }
+        }else{
+            this.nEff=1;
+            this.ans[0]="SPL tidak bisa diselesaikan dengan metode cramer";
         }
     }
 }

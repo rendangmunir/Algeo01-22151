@@ -61,18 +61,24 @@ public class Invers {
         Matrix ans;
         int maxBaris = Matrix.getBaris(M0);
         int maxKolom = Matrix.getKolom(M0);
-        SPL.eselonRed(M);
         // cek apakah ada baris yang berisi 0 semua
         boolean cek = true;
+        boolean cek2 = true;
         int j=0;
-        while(cek && j<maxKolom){
-            if(Matrix.getElmt(M,maxBaris-1,j)!=0){
-                cek = false;
+        if(maxBaris!=maxKolom){
+            cek2=false;
+        }
+        if (cek2){
+            SPL.eselonRed(M);
+            while(cek && j<maxKolom){
+                if(Matrix.getElmt(M,maxBaris-1,j)!=0){
+                    cek = false;
+                }
+                j++;
             }
-            j++;
         }
         
-        if (cek){
+        if (cek && !cek2){
             System.out.println("Matriks tidak memiliki balikan");
             this.nEff=1;
             this.ansinv[0]="Matriks tidak memiliki balikan";
