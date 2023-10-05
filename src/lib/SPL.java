@@ -30,141 +30,117 @@ public class SPL {
         return spl.nEff;
     }
 
-    public static void eselon(Matrix M){
+    public static Matrix eselon(Matrix M){
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
 
         // OBE
-        for(int k=0;k<maxBaris;k++){
-            double mx_el = Matrix.getElmt(M, k, k);
-            int mx_row = k;
+        int i =0;
+        for(int k=0;k<maxKolom-1;k++){
+            if(i == maxBaris) break;
+            boolean is0 = false;
             
-            for(int i=k+1;i<maxBaris;i++){
-                if(Math.abs(Matrix.getElmt(M, i, k)) > mx_el){
-                    mx_el = Matrix.getElmt(M, i, k);
-                    mx_row = i;
-                }
-            }
-
-            for(int i=0;i<maxKolom;i++){
-                double temp = Matrix.getElmt(M, k, i);
-                Matrix.inputElmt(M, k, i, Matrix.getElmt(M, mx_row, i)); 
-                Matrix.inputElmt(M, mx_row, i, temp); 
-            }
-
-            for(int i=k+1;i<maxBaris;i++){
-                if(Matrix.getElmt(M, k, k) != 0){
-                    double fact = Matrix.getElmt(M, i, k) / Matrix.getElmt(M, k, k);
-
-                    for(int j = k+1; j<maxKolom ;j++){
-                        Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)-(fact*Matrix.getElmt(M, k, j)));
+            double cek0 = Math.abs(Matrix.getElmt(M, i, k));
+            if(cek0 == 0){
+                int rowNow = i+1;
+                is0 = true;
+                while(is0 && rowNow<maxBaris){
+                    if(Matrix.getElmt(M, rowNow, k) != 0){
+                        is0 = true;
+                        for(int j=0;j<maxKolom;j++){
+                            double temp = Matrix.getElmt(M, rowNow, j);
+                            Matrix.inputElmt(M, rowNow, j, Matrix.getElmt(M, i, j)); 
+                            Matrix.inputElmt(M, i, j, temp); 
+                        }
+                        is0=false;
                     }
-                    Matrix.inputElmt(M, i, k, 0);
+                    rowNow++;
                 }
             }
-        }
-        
-        // membuat 1 utama
-        for(int i=0;i<maxBaris;i++){
-            for(int j=i+1;j<maxKolom;j++){
-                if(Matrix.getElmt(M, i, i) != 0){
-                    Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)/(Matrix.getElmt(M, i, i)));     
+
+            if(!is0){
+                double fact = Matrix.getElmt(M, i, k);
+                for(int j = k; j< maxKolom;j++){
+                    Matrix.inputElmt(M, i, j, Matrix.getElmt(M, i, j)/fact);
                 }
+                for(int y = i+1;y<maxBaris;y++){
+                    fact = Matrix.getElmt(M, y, k);
+                    if(fact !=0){
+                        for(int z = k ;z<maxKolom;z++){
+                            Matrix.inputElmt(M, y, z,  Matrix.getElmt(M, y, z)-(Matrix.getElmt(M, i, z)*fact));
+                        }
+                    }
+                }
+                i++;
             }
-            if(Matrix.getElmt(M, i, i) != 0){
-                Matrix.inputElmt(M,i,i,Matrix.getElmt(M, i, i)/(Matrix.getElmt(M, i, i)));
-            }  
         }
+        return M;
     }
 
-    public static void eselonRed(Matrix M){
-        eselon(M);
-        int a=0;
+    public static Matrix eselonRed(Matrix M){
+        M = eselon(M);
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
-        // buat 0 diatas dan bawah 1 utama
-        while(a<Matrix.getBaris(M)){
-            //cek atas
-            for(int i=a-1;i>=0;i--){
-                if(Matrix.getElmt(M, a, a) !=0){
-                    double fact = Matrix.getElmt(M, i, a) / Matrix.getElmt(M, a, a);
-
-                    for(int j = a+1; j<maxKolom ;j++){
-                        Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)-(fact*Matrix.getElmt(M, a, j)));
+        for(int i=maxBaris-1;i >=0;i--){
+            for(int j=0;j<maxKolom-1;j++){
+                if(Matrix.getElmt(M, i, j) == 1){
+                    for(int k = i-1;k>=0;k--){
+                        double fact = Matrix.getElmt(M, k, j);
+                        for(int l = j;l<maxKolom;l++){
+                            Matrix.inputElmt(M, k, l, Matrix.getElmt(M, k, l) - (Matrix.getElmt(M, i, l)*fact));
+                        }
                     }
-                    Matrix.inputElmt(M, i, a, 0);
+                    break;
                 }
             }
-
-            //cek bawah
-            for(int i=a+1;i<maxBaris;i++){
-                if(Matrix.getElmt(M, a, a) !=0){
-                    double fact = Matrix.getElmt(M, i, a) / Matrix.getElmt(M, a, a);
-
-                    for(int j = a+1; j<maxKolom ;j++){
-                        Matrix.inputElmt(M,i,j,Matrix.getElmt(M, i, j)-(fact*Matrix.getElmt(M, a, j)));
-                    }
-                    Matrix.inputElmt(M, i, a, 0);
-                }
-            }
-            a++;
         }
+        return M;
     }
 
     // proses untuk solusi banyak
     public void manySolution(Matrix M){
-        boolean rowZero = true;
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
-        this.nEff = maxBaris;
-        int br = maxBaris-1;
-        int cntRowzero = 0;
-        while(rowZero){
-            for(int j=0;j<maxKolom;j++){
-                if(Matrix.getElmt(M,br,j)!=0){
-                rowZero = false;
-                }
-            }
-            if(rowZero){
-                cntRowzero++;
-            }
-            br--;
+        boolean[] visited = new boolean[maxKolom-1];
+        String[] param = new String[maxKolom-1];
+        int num =0;
+        this.nEff = maxKolom-1;
+        for(int i=0;i<maxKolom-1;i++){
+            visited[i] = false;
         }
-        // buat variable
-        String[] param = new String[cntRowzero];
-        for(int i=0;i<cntRowzero;i++){
-            param[i] = "P" + String.valueOf(i+1);
-        }
-
         for(int i=0;i<maxBaris;i++){
-            this.x[i] = "";
-        }
+            for(int j=i;j<maxKolom-1;j++){
+                if(Matrix.getElmt(M,i,j) == 1){
+                    visited[j] = true;
+                    String tmp = "";
+                    if(Matrix.getElmt(M, i, maxKolom-1)!=0){
+                        tmp += String.valueOf(Matrix.getElmt(M, i, maxKolom-1));
+                    }
+                    for(int k=j+1;k<maxKolom-1;k++){
+                        if(M.getElmt(M, i, k) != 0){
+                            if(!visited[k]){
+                                visited[k] = true;
+                                num++;
+                                param[k] = "P" + String.valueOf(num);
+                                this.ans[k] = "X" + String.valueOf(k+1) + " = " + String.valueOf(param[k]);
+                            }
+                            if(Matrix.getElmt(M,i, k) > 0) tmp += (tmp.length() == 0 ? "" : " - ") + (Math.abs(Matrix.getElmt(M,i, k)) != 1.0 ? Double.toString(Math.abs(Matrix.getElmt(M,i, k))) : "") + param[k];
+                            else tmp += (tmp.length() == 0 ? "" : " + ") + (Math.abs(Matrix.getElmt(M,i, k)) != 1.0 ? Double.toString(Math.abs(Matrix.getElmt(M,i, k))) : "") + param[k];
 
-        int cntParam = 0;
-        for(int i=maxBaris-1;i>=0;i--){
-            if(cntParam != cntRowzero){
-                this.x[i] = param[cntParam];
-                cntParam++;
-            }
-            else{
-                this.x[i] = String.valueOf(Matrix.getElmt(M, i, maxKolom-1));
-                for(int j=i+1;j<maxKolom-1;j++){
-                    if(Matrix.getElmt(M, i, j) !=0){
-                        this.x[i] = this.x[i] + " - " + String.valueOf(Matrix.getElmt(M, i, j)) + this.x[j]; 
+                        }
+                    }
+                    this.ans[j] = "X" + String.valueOf(j+1) + " = " + tmp ;
+                    break;
+                }
+                else{
+                    if(!visited[j]){
+                        visited[j] = true;
+                        num++;
+                        param[j] = "P" + String.valueOf(num);
+                        this.ans[j] = "X" + Integer.toString(j+1) + " = " + param[j] + "\n";
                     }
                 }
             }
-        }
-
-        for(int i=0;i<maxBaris;i++){
-            this.ans[i] = "";
-        }
-        
-        // simpan solusi
-        for(int i=0;i<maxBaris;i++){
-            System.out.print("X"+(i+1)+" = "+this.x[i]);
-            this.ans[i] = this.ans[i] + "X" + (i+1) + " = " + this.x[i];
-            System.out.println();
         }
 
     }
@@ -236,48 +212,50 @@ public class SPL {
         double[] x={0};
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
-        x = new double[maxBaris];
-        eselon(M);
-        // cek solusi banyak & gaada solusi
-        boolean solBanyak = false;
+      //  x = new double[maxBaris];
+        M = eselon(M);
+        boolean solusiUnik= true;
         boolean minSolusi = false;
         boolean cek = true;
         int j=0;
+        // cek gaada solusi
         while(cek && j<maxKolom-1){
             if(Matrix.getElmt(M,maxBaris-1,j)!=0){
                 cek = false;
             }
             j++;
         }
-
         if(cek){
             if(Matrix.getElmt(M,maxBaris-1,maxKolom-1)!=0){
                 minSolusi = true;
             }
-            else{
-                solBanyak = true;
+        }
+
+        // cek solusi unik 
+        if(Matrix.getBaris(M) < Matrix.getKolom(M)-1){
+            solusiUnik = false;
+        }
+        if(solusiUnik){
+            for(int i=0;i<maxKolom-1;i++){
+                if(Matrix.getElmt(M, i, i) != 1){
+                    solusiUnik = false;
+                }
             }
         }
-        //solusi banyak
-        if(solBanyak){
-            eselonRed(M);
-            manySolution(M);
-        }
-        //gaada solusi
-        else if(minSolusi){
+
+        if(minSolusi){
             this.nEff = 1;
-            System.out.println("SPL ini tidak memiliki solusi");
             this.ans[0] = "SPL ini tidak memiliki solusi" ;
         }
-        //solusi unik
-        else{
-            this.nEff = maxBaris;
-            for(int i=0;i<maxBaris;i++){
+        else if (solusiUnik){
+            x = new double[maxKolom-1];
+            this.nEff = maxKolom -1;
+            for(int i=0;i<maxKolom-1;i++){
                 this.ans[i] = "";
             }
-            for(int i=maxBaris-1;i>=0;i--){
+            for(int i=maxKolom-2;i>=0;i--){
                 x[i] = Matrix.getElmt(M, i, maxKolom-1);
-                for(int k=i+1;k<maxBaris;k++){
+                for(int k=i+1;k<maxKolom-1;k++){
                     x[i]+=x[k]*Matrix.getElmt(M, i, k)*-1;
                 }
             }
@@ -287,56 +265,68 @@ public class SPL {
                 this.ans[i] = ans[i] + "X" + (i+1) + " : " + this.x[i];
             }
         }
+        else{
+            eselonRed(M);
+            manySolution(M);
+        }
     }
 
     public void Gauss_Jordan(Matrix M){
         double[] x={0};
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
-        x = new double[maxBaris];
-        eselonRed(M);
-         // cek solusi banyak & gaada solusi
-        boolean solBanyak = false;
+       // x = new double[maxBaris];
+        M = eselonRed(M);
+        boolean solusiUnik= true;
         boolean minSolusi = false;
         boolean cek = true;
         int j=0;
+        // cek gaada solusi
         while(cek && j<maxKolom-1){
             if(Matrix.getElmt(M,maxBaris-1,j)!=0){
                 cek = false;
             }
             j++;
         }
-
         if(cek){
             if(Matrix.getElmt(M,maxBaris-1,maxKolom-1)!=0){
                 minSolusi = true;
             }
-            else{
-                solBanyak = true;
+        }
+
+        // cek solusi unik 
+        if(Matrix.getBaris(M) < Matrix.getKolom(M)-1){
+            solusiUnik = false;
+        }
+        if(solusiUnik){
+            for(int i=0;i<maxKolom-1;i++){
+                if(Matrix.getElmt(M, i, i) != 1){
+                    solusiUnik = false;
+                }
             }
         }
-        // solusi banyak
-        if(solBanyak){
-            this.nEff = maxBaris;
-            manySolution(M);
-        }
-        // gaada solusi
-        else if(minSolusi){
+
+        if(minSolusi){
             this.nEff = 1;
-            System.out.println("SPL ini tidak memiliki solusi");
-            this.ans[0] = "SPL ini tidak memiliki solusi";
+            this.ans[0] = "SPL ini tidak memiliki solusi" ;
         }
-        //solusi unik
-        else{
-            this.nEff = maxBaris;
-            for(int i=0;i<maxBaris;i++){
-                x[i] = Matrix.getElmt(M, i, maxKolom-1);
+        else if (solusiUnik){
+            x = new double[maxKolom-1];
+            this.nEff = maxKolom-1;
+            for(int i=0;i<maxKolom-1;i++){
                 this.ans[i] = "";
             }
-            for(int i=0;i<maxBaris;i++){
+            for(int i=maxKolom-2;i>=0;i--){
+                x[i] = Matrix.getElmt(M, i, maxKolom-1);
+            }
+
+            for(int i=0;i<maxKolom-1;i++){
                 this.x[i] = String.format("%.6f", x[i]);
                 this.ans[i] = ans[i] + "X" + (i+1) + " : " + this.x[i];
-            } 
+            }
+        }
+        else{
+            manySolution(M);
         }
     }
 
