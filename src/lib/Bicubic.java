@@ -10,6 +10,7 @@ import java.lang.Math;
 
 public class Bicubic {
 
+    //input bicubic
     private static void inputBicubic(Matrix M,Matrix M2){
         BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
         boolean found = false;

@@ -9,9 +9,8 @@ import java.util.Scanner;
 
 public class Interpolasi {
     
-    
+    // Driver Interpolasi
     public static void solveInterpolasi(){
-        // input
         Scanner input = new Scanner(System.in);
         BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
         double[] x ={0};
@@ -26,6 +25,7 @@ public class Interpolasi {
             System.out.println("Input salah,silahkan ulangi");
             pilihan = input.nextInt();
         }
+        // input dari keyboard
         if(pilihan == 1){
             System.out.println("Masukkan n: ");
             br = input.nextInt();
@@ -39,6 +39,7 @@ public class Interpolasi {
             System.out.println("Masukkan nilai X yang ingin ditaksir : ");
             X = input.nextDouble();
         }
+        // input dari file
         else if(pilihan == 2){
             boolean found = false;
             String fileName = "";

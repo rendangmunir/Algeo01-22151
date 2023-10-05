@@ -15,7 +15,7 @@ public class SPL {
 
    String[]x;
 
-    
+    // ADT SPL
     public SPL(){
         this.ans = new String[99999];
         this.nEff = 0;
@@ -34,6 +34,7 @@ public class SPL {
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
 
+        // OBE
         for(int k=0;k<maxBaris;k++){
             double mx_el = Matrix.getElmt(M, k, k);
             int mx_row = k;
@@ -63,7 +64,7 @@ public class SPL {
             }
         }
         
-
+        // membuat 1 utama
         for(int i=0;i<maxBaris;i++){
             for(int j=i+1;j<maxKolom;j++){
                 if(Matrix.getElmt(M, i, i) != 0){
@@ -81,6 +82,7 @@ public class SPL {
         int a=0;
         int maxBaris = Matrix.getBaris(M);
         int maxKolom = Matrix.getKolom(M);
+        // buat 0 diatas dan bawah 1 utama
         while(a<Matrix.getBaris(M)){
             //cek atas
             for(int i=a-1;i>=0;i--){
@@ -109,6 +111,7 @@ public class SPL {
         }
     }
 
+    // proses untuk solusi banyak
     public void manySolution(Matrix M){
         boolean rowZero = true;
         int maxBaris = Matrix.getBaris(M);
@@ -127,6 +130,7 @@ public class SPL {
             }
             br--;
         }
+        // buat variable
         String[] param = new String[cntRowzero];
         for(int i=0;i<cntRowzero;i++){
             param[i] = "P" + String.valueOf(i+1);
@@ -155,7 +159,8 @@ public class SPL {
         for(int i=0;i<maxBaris;i++){
             this.ans[i] = "";
         }
-
+        
+        // simpan solusi
         for(int i=0;i<maxBaris;i++){
             System.out.print("X"+(i+1)+" = "+this.x[i]);
             this.ans[i] = this.ans[i] + "X" + (i+1) + " = " + this.x[i];
@@ -164,10 +169,11 @@ public class SPL {
 
     }
 
-  
+    // Driver SPL
     public static void ansSPL(){
         Scanner input = new Scanner(System.in);
         BufferedReader Fileinput = new BufferedReader(new InputStreamReader(System.in));
+        // Menu SPL
         System.out.println("Pilih metode yang ingin digunakan");
         System.out.println("1. Gauss");
         System.out.println("2. Gauss Jordan");
@@ -191,6 +197,12 @@ public class SPL {
             spl.cramer();
         }
 
+        // menampilkan solusi spl
+        System.out.println("Solusi SPl : ");
+        for(int i=0;i<spl.nEff;i++){
+            System.out.println(spl.ans[i]);
+        }
+
         System.out.println("Apakah hasil SPl ingin anda simpan ?");
         System.out.println("1. Ya");
         System.out.println("2. Tidak");
@@ -199,6 +211,7 @@ public class SPL {
             System.out.println("Masukan salah silahkan ulangi!");
             pilihan = input.nextInt();
         }
+        // simpan hasil di file
         if(pilihan == 1){
             System.out.print("Masukkan nama file: ");
             String fileName = "";
@@ -245,15 +258,18 @@ public class SPL {
                 solBanyak = true;
             }
         }
+        //solusi banyak
         if(solBanyak){
             eselonRed(M);
             manySolution(M);
         }
+        //gaada solusi
         else if(minSolusi){
             this.nEff = 1;
             System.out.println("SPL ini tidak memiliki solusi");
             this.ans[0] = "SPL ini tidak memiliki solusi" ;
         }
+        //solusi unik
         else{
             this.nEff = maxBaris;
             for(int i=0;i<maxBaris;i++){
@@ -266,11 +282,7 @@ public class SPL {
                 }
             }
 
-            System.out.println("Hasil SPL menggunakan metode gauss sebagai berikut");
             for(int i=0;i<maxBaris;i++){
-                System.out.print("X"+(i+1)+" : ");
-                System.out.format("%.6f",x[i]);
-                System.out.println("");
                 this.x[i] = String.format("%.6f", x[i]);
                 this.ans[i] = ans[i] + "X" + (i+1) + " : " + this.x[i];
             }
@@ -303,28 +315,25 @@ public class SPL {
                 solBanyak = true;
             }
         }
+        // solusi banyak
         if(solBanyak){
             this.nEff = maxBaris;
             manySolution(M);
         }
-
+        // gaada solusi
         else if(minSolusi){
             this.nEff = 1;
             System.out.println("SPL ini tidak memiliki solusi");
             this.ans[0] = "SPL ini tidak memiliki solusi";
         }
-
+        //solusi unik
         else{
             this.nEff = maxBaris;
             for(int i=0;i<maxBaris;i++){
                 x[i] = Matrix.getElmt(M, i, maxKolom-1);
                 this.ans[i] = "";
             }
-            System.out.println("Hasil SPL menggunakan metode gauss jordan sebagai berikut");
             for(int i=0;i<maxBaris;i++){
-                System.out.print("X"+(i+1)+" : ");
-                System.out.format("%.6f",x[i]);
-                System.out.println("");
                 this.x[i] = String.format("%.6f", x[i]);
                 this.ans[i] = ans[i] + "X" + (i+1) + " : " + this.x[i];
             } 
@@ -357,18 +366,12 @@ public class SPL {
         if (!(Matrix.getKolom(invA)==1 && Matrix.getBaris(invA)==1 && Matrix.getElmt(invA, 0, 0)==0)){
             Matrix ans = Matrix.crossMatrix(invA, B);
             this.nEff=Matrix.getBaris(ans);
-            System.out.println("");
-            System.out.println("Hasil SPL : ");
             for (int i=0; i<this.nEff; i++){
-                System.out.print("X"+(i+1)+" : ");
-                System.out.format("%.6f",Matrix.getElmt(ans, i, 0));
-                System.out.println("");
-                this.ans[i]="X"+(i+1)+" : "+ String.format(".%6f", Matrix.getElmt(ans, i, 0));
+                this.ans[i]="X"+(i+1)+" : "+ String.format("%.6f", Matrix.getElmt(ans, i, 0));
             }
         }else{
             this.nEff=1;
             this.ans[0]="Solusi parametrik";
-            System.out.println("Solusi parametrik");
         }
         
     }
@@ -393,10 +396,7 @@ public class SPL {
         this.nEff=Matrix.getKolom(A);
         for (int i=0; i<Matrix.getKolom(A); i++){
             X[i]=(double)Det[i]/DetA;
-            System.out.print("X"+(i+1)+" : ");
-            System.out.format("%.6f",X[i]);
-            System.out.println("");
-            this.ans[i]="X"+(i+1)+" : "+ String.format(".%6f", X[i]);
+            this.ans[i]="X"+(i+1)+" : "+ String.format("%.6f", X[i]);
         }
     }
 }
