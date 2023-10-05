@@ -25,6 +25,7 @@ Multiple Linear Regression is solved by making a linear equation from the points
 
 
 ## Structure
+``` bash
 .
 └── Algeo01-22151/
     ├── README.md
@@ -52,6 +53,7 @@ Multiple Linear Regression is solved by making a linear equation from the points
     │   │   └── SPL.java
     │   └── Main.java
     └── test
+```
     
 ## Built With
 * [Java](https://www.java.com/en/)
